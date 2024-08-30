@@ -6,8 +6,6 @@ from CProgramWriter import writeProgram
 from CMBCSolver import solve
 from LogWriter import writeLogs
 from Validator import validate
-
-
 def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, domainFile):
     #first step write the c program
     print("writing c program")
@@ -55,6 +53,7 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
 def run():
     logs = list()
     if not multi:
+        print("combining Domain: " + domain + " with problem: " + problem)
         parsedProblem = parse(domain, problem)
         allowedRequirements = [":strips", ":typing", ":equality"]  # , ":negation"]#, ":conditional-effects"]
         for requirement in parsedProblem.requirements.requirements:
@@ -113,11 +112,14 @@ def run():
                 logs.append(log)
     if not concise:
         first = True
-        print("\n\n\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/")
+        print("\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/")
         for log in logs:
             if not first:
                 print("******************")
-            print(log)
+            if "failed" in log:
+                print(log)
+            else:
+                print(log)
 
 
 if __name__ == "__main__":

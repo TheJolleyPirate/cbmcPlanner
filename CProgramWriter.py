@@ -1,6 +1,6 @@
 from ConditionParser import parseCondition
-from fastDownwardParser.pddl.tasks import Task
-from fastDownwardParser.pddl.pddl_types import Type
+from externalTools.fastDownwardParser.pddl.tasks import Task
+from externalTools.fastDownwardParser.pddl.pddl_types import Type
 typeToNum = list()
 objectToNum = list()
 typeObjectNum = list()

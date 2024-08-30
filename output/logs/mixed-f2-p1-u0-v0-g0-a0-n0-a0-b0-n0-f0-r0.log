@@ -2,5 +2,5 @@ mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r0 solved!
 	with:
 		plan: 0: (up f0 f1) 1: (board f1 p0) 2: (down f1 f0) 3: (depart f0 p0) 
 		depth: 4
-		time: 0.60 seconds
+		time: 0.83 seconds
 		state size: 23

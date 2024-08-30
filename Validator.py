@@ -19,7 +19,7 @@ def validate(planList, domain, problem, verbose):
     domainFile = os.path.abspath(domain)
     problemFile = os.path.abspath(problem)
     planFile = os.path.abspath("temp.txt")
-    valPath = os.path.abspath("val/build/bin/Validate")
+    valPath = os.path.abspath("externalTools/val/Validate")
     cmdList = [valPath, domainFile, problemFile, planFile]
     cmd = subprocess.run(cmdList, capture_output=True, text=True)
     results = cmd.stdout

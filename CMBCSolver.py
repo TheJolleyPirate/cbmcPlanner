@@ -1,3 +1,4 @@
+import os
 import subprocess
 import timeit
 
@@ -42,7 +43,8 @@ def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, last
 def solve(cFile, maxDepth, depth, startDepth, depthStep, manual, oldActionNames, newActionNames, objectToNum, concise, verbose):
     toProcess = False
     timeout = 300
-    cmdList = ["cbmc", cFile, "--compact-trace", "--unwind", ""]
+    cbmcPath = os.path.abspath("externalTools/ubuntu-22-cbmc-6.1.1/cbmc")
+    cmdList = [cbmcPath, cFile, "--compact-trace", "--unwind", ""]
     timeoutBool = False
     userTime = None
     time = 0
