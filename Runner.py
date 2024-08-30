@@ -123,7 +123,7 @@ def run():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='PDDLtoC',
+    parser = argparse.ArgumentParser(prog='cbmcPlan',
                                      description='translates PDDL into a c program which can be solved using CBMC')
     parser.add_argument('-d', '--domain', help='the domain PDDL file if needed')
     parser.add_argument('-p', '--problem', help='the problem PDDL file if needed')
