@@ -1,6 +1,0 @@
-blocks-4-0 solved!
-	with:
-		plan: 0: (pick-up b) 1: (stack b a) 2: (pick-up c) 3: (stack c b) 4: (pick-up d) 5: (stack d c) 
-		depth: 6
-		time: 17.00 seconds
-		state size: 45

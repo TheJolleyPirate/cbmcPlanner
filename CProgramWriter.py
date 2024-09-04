@@ -1,4 +1,9 @@
+import argparse
+from operator import index
+from pathlib import Path
+
 from ConditionParser import parseCondition
+from ParsePDDL import parse
 from externalTools.fastDownwardParser.pddl.tasks import Task
 from externalTools.fastDownwardParser.pddl.pddl_types import Type
 typeToNum = list()
@@ -8,17 +13,25 @@ numObjects = 0
 predicates = list()
 maxParameters = 0
 actionParameters = list()
-def intro(problem: Task, statSize = None):
+def intro(problem: Task, stateSize):
     #this function writes the preamble of the c code and sets up the global variables
+    #writing some information for the solver
+    preStatecCode = "//PREAMBLE\n"
+    preStatecCode += "//action translation:\n"
+    for act in problem.actions:
+        name = act.name
+        newName = name.replace("-", "_")
+        preStatecCode += "//" + newName + "==" + name + "\n"
+    preStatecCode += "//END OF PREAMBLE\n"
     #included libraries
-    preStaticCode = "#include<stdio.h>\n"
-    preStaticCode += "#include <stdlib.h>\n"
+    preStatecCode += "#include<stdio.h>\n"
+    preStatecCode += "#include <stdlib.h>\n"
     #CBMC indeterminate function
     # noinspection SpellCheckingInspection
-    preStaticCode += "int nondet_Int();\n"
-    preStaticCode += "//problem definition\n"
+    preStatecCode += "int nondet_Int();\n"
+    preStatecCode += "//problem definition\n"
     #setting up the state
-    preStaticCode += "//state\n"
+    preStatecCode += "//state\n"
     cCode = "//reserve state[0] to always be false\n"
     cCode += "int nextIndex = 1;\n"
 
@@ -71,6 +84,16 @@ def intro(problem: Task, statSize = None):
                             currentTypeName = Type(types[num]).basetype_name
                         else:
                             break
+    cCode += "//object translation:\n"
+    cCode += "//objectNames = {"
+    f = True
+    for obj in objectToNum:
+        if f:
+            f = False
+        else:
+            cCode += ", "
+        cCode += obj
+    cCode += "};\n"
     for obj in objects:
         temp = obj
         temp += "};\n"
@@ -109,22 +132,22 @@ def intro(problem: Task, statSize = None):
                         elementSizes.append(typeObjectNum[j])
                         break
         tempNum = 1
-        if statSize is None:
+        if stateSize <= 1:
             for ele in elementSizes:
                 tempNum *= ele
             maxStateSize += tempNum
         predicates.append((name, predicateTypes))
         cCode += "int " + name + tempString + ";\n"
     #state[0] is reserved to be always false
-    if statSize is None:
-        preStaticCode += "int n = " + str(maxStateSize + 1) + ";\n"
-        preStaticCode += "char state[" + str(maxStateSize + 1) + "];\n"
-        statSize = maxStateSize
+    if stateSize <= 1:
+        stateSize = maxStateSize * stateSize
+        preStatecCode += "int n = " + str(stateSize + 1) + ";\n"
+        preStatecCode += "char state[" + str(stateSize + 1) + "];\n"
     else:
-        preStaticCode += "int n = " + str(statSize + 1) + ";\n"
-        preStaticCode += "char state[" + str(statSize + 1) + "];\n"
-    cCode = preStaticCode + cCode
-    return cCode, statSize
+        preStatecCode += "int n = " + str(stateSize + 1) + ";\n"
+        preStatecCode += "char state[" + str(stateSize + 1) + "];\n"
+    cCode = preStatecCode + cCode
+    return cCode, stateSize
 
 
 def indexFunctions():
@@ -226,6 +249,9 @@ def actions(problem: Task):
         cCode += negativeEffects
         cCode += positiveEffects
         cCode += "\t}\n"
+        cCode += "\telse{\n"
+        cCode += "\t\texit(-1);\n"
+        cCode += "\t}\n"
         cCode += "\treturn;\n"
         cCode += "}\n"
 
@@ -250,7 +276,7 @@ def predicateSetterRecursion(name, indicesLeft, tabs, subscript=0):
 
 
 def boundsSetterRecursion(name, params, indicesLeft, tabs, subscript=0, oldInput=""):
-    #this helps the main loop by using recursion
+    #this sets the bounds for the object variables
     global typeToNum
     global typeObjectNum
     cCode = ""
@@ -347,14 +373,14 @@ def mainLoop(problem: Task):
     return cCode
 
 
-def writeProgram(problem: Task, outputFolder):
+def writeProgram(problem: Task, outputFolder, stateSize):
     problemName = problem.task_name
     problemName = problemName.replace("-", "-")
     fileName = outputFolder + "/" + problemName + ".c"
     cFile = open(fileName, "w")
-    temp = intro(problem)
+    temp = intro(problem, stateSize)
     cCode = temp[0]
-    stateSize = temp[1]
+    outStateSize = temp[1]
     cCode += indexFunctions()
     cCode += actions(problem)
     cCode += mainLoop(problem)
@@ -364,7 +390,7 @@ def writeProgram(problem: Task, outputFolder):
     global typeToNum
     typeToNum = list()
     global objectToNum
-    temp = objectToNum
+    objectToNumTemp = objectToNum
     objectToNum = list()
     global typeObjectNum
     typeObjectNum = list()
@@ -376,4 +402,20 @@ def writeProgram(problem: Task, outputFolder):
     maxParameters = 0
     global actionParameters
     actionParameters = list()
-    return fileName, stateSize, temp, problemName
+    return fileName, outStateSize, objectToNumTemp, problemName
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog='PDDLtranslate', description="translates a PDDL problem into a CBMC solvable file")
+    parser.add_argument('-d', '--domain', type=str, required=True, help='the domain PDDL file')
+    parser.add_argument('-p', '--problem', type=str, required=True, help='the problem PDDL file')
+    parser.add_argument('-s', '--stateSize', type=float, default=1,
+                        help='state size; 0-1 percentage based: e.g. 0.2 = 20% max possible size, >1 sets static state size')
+    args = parser.parse_args()
+    d = args.domain
+    p = args.problem
+    s = args.stateSize
+    parsedProblem = parse(d, p)
+    rootFolder = p.rsplit("/", 1)[0]
+    cOutFolder = rootFolder + "/output/cFiles"
+    Path(cOutFolder).mkdir(parents=True, exist_ok=True)
+    writeProgram(parsedProblem, cOutFolder, s)

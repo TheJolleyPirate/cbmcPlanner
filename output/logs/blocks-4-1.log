@@ -1,7 +1,0 @@
-blocks-4-1 not solved
-	reason failed: invalid plan
-	with
-		plan: 0: (stack b c) 1: (put-down b) 2: (stack c a) 3: (put-down c) 4: (stack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
-		depth: 10
-		time: 77.99 seconds
-		state size: 45

@@ -1,7 +1,0 @@
-blocks-25-0 not solved
-	reason failed: timeout
-	with
-		no plan found
-		depth: 26
-		time: 300.00 seconds
-		state size: 1326
