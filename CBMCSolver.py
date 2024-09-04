@@ -3,9 +3,11 @@ import multiprocessing
 import os
 import subprocess
 import timeit
+import math
 from pathlib import Path
 from time import sleep
 
+from sympy import ceiling
 from sympy.logic.inference import valid
 
 from LogWriter import writeLogs
@@ -31,7 +33,10 @@ def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, last
     cmdList[-1] = str(depth)
     try:
         start = timeit.default_timer()
-        cmd = subprocess.run(cmdList, capture_output=True, text=True, timeout=timeout)
+        if bool(timeout):
+            cmd = subprocess.run(cmdList, capture_output=True, text=True, timeout=timeout)
+        else:
+            cmd = subprocess.run(cmdList, capture_output=True, text=True)
         stop = timeit.default_timer()
         time = stop - start
         results = cmd.stdout
@@ -60,7 +65,12 @@ def problemTimeout(pTimeout):
     global pTimeBool
     pTimeBool = True
 
-def solve(cFile, maxDepth, depth, startDepth, depthStep, manual, oldActionNames, newActionNames, objectToNum, concise, verbose, pTimeout, dTimeout):
+def currentTimeout(currentDepth, maxDepth, pTimeout, commonFactor):
+    geometricSeries = (commonFactor ** maxDepth) / (commonFactor - 1)
+    timeout = pTimeout * (commonFactor ** (currentDepth - 1)) / geometricSeries
+    return timeout
+
+def solve(cFile, maxDepth, depth, startDepth, depthStep, manual, oldActionNames, newActionNames, objectToNum, concise, verbose, pTimeout, dTimeout, gAllocation):
     toProcess = False
     cbmcPath = os.path.abspath("externalTools/ubuntu-22-cbmc-6.1.1/cbmc")
     cmdList = [cbmcPath, cFile, "--compact-trace", "--unwind", ""]
@@ -68,18 +78,22 @@ def solve(cFile, maxDepth, depth, startDepth, depthStep, manual, oldActionNames,
     userTime = None
     time = 0
     if not manual:
-        # TODO: implement geometric allocation, and problem timeout
+        # TODO: implement geometric allocation
         depth = startDepth - depthStep
         if pTimeout:
+            relativeMaxDepth = math.ceil((maxDepth - startDepth + 1) / depthStep)
+            relativeCurrentDepth = 1
             global pTimeBool
             pTimeBool = False
             probTimer = multiprocessing.Process(target=sleep, args=[pTimeout])
-            probTimer.start()
+            probTimer.gastart()
             while True:
                 if maxDepth is not None:
                     if depth >= maxDepth:
                         break
                 depth += depthStep
+                if gAllocation > 1:
+                    dTimeout = currentTimeout(relativeCurrentDepth, relativeMaxDepth, pTimeout, gAllocation)
                 results = individualSolver(cFile, cmdList, depth, dTimeout, concise, verbose, time)
                 time = results[1]
                 if bool(results[0]) or bool(results[2]) or pTimeBool:
@@ -140,9 +154,9 @@ def solve(cFile, maxDepth, depth, startDepth, depthStep, manual, oldActionNames,
         planInfo = planList
     else:
         if timeoutBool:
-            print("timeout")
+            print("timeout: " + str(dTimeout) + " seconds")
         else:
-            print("no plan found with max depth " + str(maxDepth))
+            print("no plan found with max depth: " + str(maxDepth))
         planInfo = False
     return planInfo, depth, userTime, timeoutBool
 
@@ -169,8 +183,11 @@ if __name__ == "__main__":
                         help='gives a timeout for running each PDDL problem')
     parser.add_argument('-dt', '--depthTimeout', type=int, default=300,
                         help='set the timeout for running at each depth of problem(s), default: 300, set to 0 to disable')
-    parser.add_argument('-ga', '--geometricAllocation', action='store_true', default=False,
-                        help='activates geometric allocation, based off maxDepth and problemTimeout')
+    parser.add_argument('-ga', '--geometricAllocation', type=float, default=0,
+                        help='controls the geometric allocation; >=1 turns it off, otherwise sets common factor for geometric series. '
+                             'E.g. 2 means the max depth will have 1/2 the total time and 3 means the max depth will have 2/3 the total time'
+                             'converesly 1.5 means the max depth will have 1/3 of the total time and 1.25 means the max depth has 1/4 the total time.'
+                             'Overrides depth timeout')
     args = parser.parse_args()
     cf = args.cFile
     md = args.maxDepth
@@ -182,7 +199,7 @@ if __name__ == "__main__":
     v = args.verbose
     pt = args.problemTimeout
     dt = args.depthTimeout
-
+    ga = args.geometricAllocation
     contents = open(cf, 'r').read()
     clines = contents.splitlines()
     otn = None
@@ -216,7 +233,7 @@ if __name__ == "__main__":
         actions = comparistion.split("==")
         nan.append(actions[0])
         oan.append(actions[1])
-    r = solve(cf, md, d, sd, ds, m, oan, nan, otn, c, v, pt, dt)
+    r = solve(cf, md, d, sd, ds, m, oan, nan, otn, c, v, pt, dt, ga)
     loc = cf.rsplit("/", 1)
     rootFolder = loc[0]
     logOutFolder = rootFolder

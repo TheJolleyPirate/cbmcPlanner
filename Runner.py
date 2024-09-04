@@ -10,9 +10,12 @@ from CProgramWriter import writeProgram
 from CBMCSolver import solve
 from LogWriter import writeLogs
 from Validator import validate
-def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, domainFile):
+def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, domainFile, positionInfo = None):
     #first step write the c program
-    print("writing c program")
+    if positionInfo is None:
+        print("writing c program")
+    else:
+        print("writing c program " + str(positionInfo[0]) + "/" + str(positionInfo[1]))
     programDetails = writeProgram(parsedProblem, cOutFolder, stateSize)
     cFile = programDetails[0]
     problemName = programDetails[3]
@@ -32,7 +35,7 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
     else:
         print("solving " + problemName + " with CBMC:")
     results = solve(cFile, maxDepth, depth, startingDepth, depthStep, manual, oldActionNames, newActionNames,
-                    objectToNum, concise, verbose, pTimeout, dTimeout)
+                    objectToNum, concise, verbose, pTimeout, dTimeout, geoAllocation)
     #third step validate the solution
     if bool(results[0]):
         print("validating plan to solve " + cName + ":")
@@ -97,6 +100,8 @@ def run():
                 if currentDomain == dom:
                     domainProblems[dom].append(current)
                     break
+        numProblems = len(problemFiles)
+        problemNum = 1
         for dom in domains:
             problems = domainProblems[dom]
             for prob in problems:
@@ -105,7 +110,8 @@ def run():
                     if requirement not in allowedRequirements:
                         raise ValueError(
                             "Sorry the allowed requirements are currently limited and " + requirement + " is not allowed")
-                log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, prob, domains[dom])
+                log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, prob, domains[dom], (problemNum, numProblems))
+                problemNum += 1
                 logs.append(log)
     else:
         print("combining Domain: " + domain + " with problem: " + problem)
@@ -156,8 +162,11 @@ if __name__ == "__main__":
                         help='gives a timeout for running each PDDL problem')
     parser.add_argument('-dt', '--depthTimeout', type=int, default=300,
                         help='set the timeout for running at each depth of problem(s), default: 300, set to 0 to disable')
-    parser.add_argument('-ga', '--geometricAllocation', action='store_true', default=False,
-                        help='activates geometric allocation, based off maxDepth and problemTimeout')
+    parser.add_argument('-ga', '--geometricAllocation', type=float, default=0,
+                        help='controls the geometric allocation; >=1 turns it off, otherwise sets common factor for geometric series. '
+                             'E.g. 2 means the max depth will have 1/2 the total time and 3 means the max depth will have 2/3 the total time'
+                             'converesly 1.5 means the max depth will have 1/3 of the total time and 1.25 means the max depth has 1/4 the total time.'
+                             'Overrides depth timeout')
     parser.add_argument('-s', '--stateSize', type=float, default=1,
                         help='state size; 0-1 percentage based: e.g. 0.2 = 20% max possible size, >1 sets static state size')
     args = parser.parse_args()
@@ -181,7 +190,6 @@ if __name__ == "__main__":
         problem = domain
     if bool(args.manual) ^ bool(args.depth):
         parser.error('--manual and --depth must be given together')
-        exit(-1)
     startingDepth = args.startingDepth
     depthStep = args.depthStep
     maxDepth = args.maxDepth
@@ -193,6 +201,7 @@ if __name__ == "__main__":
     dTimeout = args.depthTimeout
     geoAllocation = args.geometricAllocation
     stateSize = args.stateSize
+
     startTime = timeit.default_timer()
     run()
     endTime = timeit.default_timer()

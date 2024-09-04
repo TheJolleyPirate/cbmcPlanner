@@ -47,6 +47,11 @@ def writeLogs(problem, logOutFolder, results, valid, stateSize, pTimeout, dTimeo
     if userTime is not None:
         time = "{:0.2f}".format(userTime)
         logs += "\ttime: " + time + " seconds\n"
+    logOutFolder += "/state" + str(stateSize)
+    if pTimeout:
+        logOutFolder += "-pT" + str(pTimeout)
+    if dTimeout:
+        logOutFolder += "-dT" + str(dTimeout)
     if valid:
         logOutFolder += "/valid"
     else:
@@ -57,12 +62,7 @@ def writeLogs(problem, logOutFolder, results, valid, stateSize, pTimeout, dTimeo
         else:
             logOutFolder += "/invalid/invalidPlan"
     Path(logOutFolder).mkdir(parents=True, exist_ok=True)
-    fileName = logOutFolder + "/" + problem + "-state" + str(stateSize)
-    if pTimeout:
-        fileName += "-pT" + str(pTimeout)
-    if dTimeout:
-        fileName += "-dT" + str(dTimeout)
-    fileName += ".log"
+    fileName = logOutFolder + "/" + problem + ".log"
     logFile = open(fileName, "w")
     logFile.write(logs)
     logFile.close()
