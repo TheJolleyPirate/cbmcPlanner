@@ -1,0 +1,10 @@
+blocks-13-0 FAILED
+	reason failed: timeout
+problem details:
+	state size: 378
+	problem timeout: False
+	depth timeout: 300
+with
+	no plan found
+	depth: 14
+	time: 300.00 seconds

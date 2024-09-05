@@ -1,0 +1,9 @@
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	problem timeout: False
+	depth timeout: 300
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 16.22 seconds

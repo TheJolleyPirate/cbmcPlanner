@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def writeLogs(problem, logOutFolder, results, valid, stateSize, pTimeout, dTimeout):
+def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realStateSize, pTimeout, dTimeout):
     plan = results[0]
     depth = results[1]
     userTime = results[2]
@@ -15,7 +15,7 @@ def writeLogs(problem, logOutFolder, results, valid, stateSize, pTimeout, dTimeo
         plan = temp
     logs = ""
     problemDetails = "problem details:\n"
-    problemDetails += "\tstate size: " + str(stateSize) + "\n"
+    problemDetails += "\tstate size: " + str(realStateSize) + "\n"
     problemDetails += "\tproblem timeout: " + str(pTimeout) + "\n"
     problemDetails += "\tdepth timeout: " + str(dTimeout) + "\n"
     if valid is None:
@@ -47,7 +47,7 @@ def writeLogs(problem, logOutFolder, results, valid, stateSize, pTimeout, dTimeo
     if userTime is not None:
         time = "{:0.2f}".format(userTime)
         logs += "\ttime: " + time + " seconds\n"
-    logOutFolder += "/state" + str(stateSize)
+    logOutFolder += "/state" + str(problemStateSize)
     if pTimeout:
         logOutFolder += "-pT" + str(pTimeout)
     if dTimeout:
@@ -62,7 +62,7 @@ def writeLogs(problem, logOutFolder, results, valid, stateSize, pTimeout, dTimeo
         else:
             logOutFolder += "/invalid/invalidPlan"
     Path(logOutFolder).mkdir(parents=True, exist_ok=True)
-    fileName = logOutFolder + "/" + problem + ".log"
+    fileName = logOutFolder + "/" + problem + "-statesize" + str(realStateSize) + ".log"
     logFile = open(fileName, "w")
     logFile.write(logs)
     logFile.close()

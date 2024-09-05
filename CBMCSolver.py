@@ -243,5 +243,6 @@ if __name__ == "__main__":
         valid = False
     else:
         valid = None
-    log = writeLogs(name, logOutFolder, r, valid, stateSize, pt, dt)
+    # TODO: get problem statesize from c file
+    log = writeLogs(name, logOutFolder, r, valid, "unkown", stateSize, pt, dt)
     print(log)

@@ -47,7 +47,7 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
     else:
         valid = False
     #fourth step write the logs
-    problemLogs = writeLogs(problemName, logOutFolder, results, valid, realStateSize, pTimeout, dTimeout)
+    problemLogs = writeLogs(problemName, logOutFolder, results, valid, stateSize, realStateSize, pTimeout, dTimeout)
     return problemLogs
 
 def sorted_nicely( l ):
