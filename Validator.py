@@ -1,7 +1,6 @@
 import os
 import subprocess
 
-
 def validate(planList, domain, problem, verbose):
     plan = ""
     actionNum = 0

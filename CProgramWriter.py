@@ -1,5 +1,4 @@
 import argparse
-from operator import index
 from pathlib import Path
 
 from ConditionParser import parseCondition
@@ -140,7 +139,7 @@ def intro(problem: Task, stateSize):
         cCode += "int " + name + tempString + ";\n"
     #state[0] is reserved to be always false
     if stateSize <= 1:
-        stateSize = maxStateSize * stateSize
+        stateSize = int(maxStateSize * stateSize)
         preStatecCode += "int n = " + str(stateSize + 1) + ";\n"
         preStatecCode += "char state[" + str(stateSize + 1) + "];\n"
     else:
@@ -148,7 +147,6 @@ def intro(problem: Task, stateSize):
         preStatecCode += "char state[" + str(stateSize + 1) + "];\n"
     cCode = preStatecCode + cCode
     return cCode, stateSize
-
 
 def indexFunctions():
     #this writes the functions which assign places in the state function to different predicates as needed
@@ -182,7 +180,6 @@ def indexFunctions():
         cCode += "\treturn index;\n"
         cCode += "}\n"
     return cCode
-
 
 def actions(problem: Task):
     #this writes the action functions
@@ -257,7 +254,6 @@ def actions(problem: Task):
 
     return cCode
 
-
 def predicateSetterRecursion(name, indicesLeft, tabs, subscript=0):
     #this helps the main loop by using recursion
     global numObjects
@@ -273,7 +269,6 @@ def predicateSetterRecursion(name, indicesLeft, tabs, subscript=0):
             temp += "[i" + str(i) + "]"
         cCode += tabs + name + temp + " = -1;\n"
     return cCode
-
 
 def boundsSetterRecursion(name, params, indicesLeft, tabs, subscript=0, oldInput=""):
     #this sets the bounds for the object variables
@@ -301,7 +296,6 @@ def boundsSetterRecursion(name, params, indicesLeft, tabs, subscript=0, oldInput
             temp = ""
         cCode += tabs + name + "(" + temp + ");\n"
     return cCode
-
 
 def mainLoop(problem: Task):
     cCode = "//main loop\n"
@@ -372,10 +366,12 @@ def mainLoop(problem: Task):
     cCode += "}\n"
     return cCode
 
-
 def writeProgram(problem: Task, outputFolder, stateSize):
     problemName = problem.task_name
     problemName = problemName.replace("-", "-")
+    stateSizePercentage = "{:.0%}".format(stateSize)
+    outputFolder += "/state" + stateSizePercentage
+    Path(outputFolder).mkdir(parents=True, exist_ok=True)
     fileName = outputFolder + "/" + problemName + ".c"
     cFile = open(fileName, "w")
     temp = intro(problem, stateSize)
@@ -384,7 +380,6 @@ def writeProgram(problem: Task, outputFolder, stateSize):
     cCode += indexFunctions()
     cCode += actions(problem)
     cCode += mainLoop(problem)
-    #print(cCode)
     cFile.write(cCode)
     cFile.close()
     global typeToNum
@@ -417,5 +412,4 @@ if __name__ == "__main__":
     parsedProblem = parse(d, p)
     rootFolder = p.rsplit("/", 1)[0]
     cOutFolder = rootFolder + "/output/cFiles"
-    Path(cOutFolder).mkdir(parents=True, exist_ok=True)
     writeProgram(parsedProblem, cOutFolder, s)

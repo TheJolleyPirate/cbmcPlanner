@@ -25,7 +25,6 @@ def parseAtom(condition: str, objectToNum: list):
         cCode += "0)]"
     return cCode
 
-
 def seperateBrackets(inputString: str, bracketType="{}"):
     separated = list()
     numOpen = 0
@@ -47,7 +46,6 @@ def seperateBrackets(inputString: str, bracketType="{}"):
         raise ValueError("more opening brackets then closing in one of the conditions")
     return separated
 
-
 def parseConjunction(condition: str, obNum: list):
     cCode = ""
     seperatedCon = seperateBrackets(condition, "{}")
@@ -58,7 +56,7 @@ def parseConjunction(condition: str, obNum: list):
             condition = condition[:-1]
             temp = condition.split("[", 1)
             conType = temp[0]
-            conContents = temp[1]
+            #conContents = temp[1]
             if conType == "Conjunction":
                 cCode += "(" + parseConjunction(con, obNum) + ")"
             elif conType == "Disjunction":
@@ -74,7 +72,6 @@ def parseConjunction(condition: str, obNum: list):
     cCode = cCode[:-4]
     return cCode
 
-
 def parseDisjunction(condition: str, obNum: list):
     cCode = ""
     seperatedCon = seperateBrackets(condition, "{}")
@@ -85,7 +82,7 @@ def parseDisjunction(condition: str, obNum: list):
             condition = condition[:-1]
             temp = condition.split("[", 1)
             conType = temp[0]
-            conContents = temp[1]
+            #conContents = temp[1]
             if conType == "Conjunction":
                 cCode += "(" + parseConjunction(con, obNum) + ")"
             elif conType == "Disjunction":
@@ -101,7 +98,6 @@ def parseDisjunction(condition: str, obNum: list):
     cCode = cCode[:-4]
     return cCode
 
-
 def parseCondition(condition: str, obNum: list):
     cCode = ""
     if "[" in condition:
@@ -111,11 +107,15 @@ def parseCondition(condition: str, obNum: list):
         conType = temp[0]
         conContents = temp[1]
         if conType == "Conjunction":
+            # Parse conjunction condition
             cCode += parseConjunction(conContents, obNum)
         elif conType == "Disjunction":
+            # Parse disjunction condition
             cCode += parseDisjunction(conContents, obNum)
         else:
+            # other condition types not supported
             raise ValueError("Condition type: " + conType + " not supported")
     else:
+        # Parse atomic condition
         cCode += parseAtom(condition, obNum)
     return cCode
