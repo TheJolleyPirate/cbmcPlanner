@@ -24,7 +24,7 @@ class Condition:
         print("%s%s" % (indent, self._dump()))
         for part in self.parts:
             part.dump(indent + "  ")
-    #CUSTOM PART CUSTOM PART CUSTOM PART
+    """CUSTOM PART CUSTOM PART CUSTOM PART"""
     def dumpToString(self):
         returnString = self._dump()
         if len(self.parts) > 0:
@@ -34,7 +34,7 @@ class Condition:
         if len(self.parts) > 0:
             returnString += "]"
         return returnString
-    #END OF CUSTOM PART END OF CUSTOM PART
+    """CUSTOM PART CUSTOM PART CUSTOM PART"""
     def _dump(self):
         return self.__class__.__name__
     def _postorder_visit(self, method_name, *args):

@@ -1,0 +1,22 @@
+mixed-f8-p4-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 FAILED
+	reason failed: timeout
+problem details:
+	state size: 636
+	depth timeout: 300
+with
+	no plan found
+	depth: 13
+	time: 300.00 seconds
+history:
+	0: depth 1 in 0.14 seconds
+	1: depth 2 in 0.14 seconds
+	2: depth 3 in 0.11 seconds
+	3: depth 4 in 0.11 seconds
+	4: depth 5 in 0.13 seconds
+	5: depth 6 in 0.13 seconds
+	6: depth 7 in 0.14 seconds
+	7: depth 8 in 0.12 seconds
+	8: depth 9 in 0.11 seconds
+	9: depth 10 in 0.10 seconds
+	10: depth 11 in 0.12 seconds
+	11: depth 12 in 0.12 seconds

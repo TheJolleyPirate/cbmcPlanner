@@ -1,0 +1,49 @@
+p06-net1-b10-g6_rt0_instance FAILED
+	reason failed: timeout
+problem details:
+	state size: 2117
+	depth timeout: 300
+with
+	no plan found
+	depth: 40
+	time: 300.00 seconds
+history:
+	0: depth 1 in 9.24 seconds
+	1: depth 2 in 8.75 seconds
+	2: depth 3 in 9.05 seconds
+	3: depth 4 in 8.68 seconds
+	4: depth 5 in 8.48 seconds
+	5: depth 6 in 8.86 seconds
+	6: depth 7 in 8.83 seconds
+	7: depth 8 in 8.90 seconds
+	8: depth 9 in 8.56 seconds
+	9: depth 10 in 9.01 seconds
+	10: depth 11 in 9.02 seconds
+	11: depth 12 in 8.79 seconds
+	12: depth 13 in 8.65 seconds
+	13: depth 14 in 8.73 seconds
+	14: depth 15 in 8.62 seconds
+	15: depth 16 in 8.65 seconds
+	16: depth 17 in 8.70 seconds
+	17: depth 18 in 8.68 seconds
+	18: depth 19 in 8.57 seconds
+	19: depth 20 in 8.74 seconds
+	20: depth 21 in 8.69 seconds
+	21: depth 22 in 8.59 seconds
+	22: depth 23 in 8.63 seconds
+	23: depth 24 in 8.75 seconds
+	24: depth 25 in 8.81 seconds
+	25: depth 26 in 8.82 seconds
+	26: depth 27 in 8.54 seconds
+	27: depth 28 in 8.57 seconds
+	28: depth 29 in 8.86 seconds
+	29: depth 30 in 8.80 seconds
+	30: depth 31 in 8.82 seconds
+	31: depth 32 in 8.69 seconds
+	32: depth 33 in 8.66 seconds
+	33: depth 34 in 8.49 seconds
+	34: depth 35 in 8.63 seconds
+	35: depth 36 in 8.59 seconds
+	36: depth 37 in 8.73 seconds
+	37: depth 38 in 8.68 seconds
+	38: depth 39 in 8.67 seconds

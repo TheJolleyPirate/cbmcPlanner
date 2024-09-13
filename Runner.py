@@ -4,7 +4,6 @@ import re
 import sys
 import timeit
 import datetime
-from wakepy import keep
 
 from ParsePDDL import parse
 from CProgramWriter import writeProgram
@@ -15,77 +14,64 @@ from Validator import validate
 def save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems):
     el = "\n"
     lineBreak = "<><><><><><><><><>" + el
-    toWrite = lineBreak
-    toWrite += str(inputFolder) + el
-    toWrite += str(cOutFolder) + el
-    toWrite += str(logOutFolder) + el
-    toWrite += str(startingDepth) + el
-    toWrite += str(depthStep) + el
-    toWrite += str(maxDepth) + el
-    toWrite += str(manualDepth) + el
-    toWrite += str(verbose) + el
-    toWrite += str(concise) + el
-    toWrite += str(pTimeout) + el
-    toWrite += str(dTimeout) + el
-    toWrite += str(geoAllocation) + el
-    toWrite += str(stateSize) + el
-    toWrite += str(problemNum) + el
-    toWrite += str(numProblems) + el
+    toWrite = ""
+    toWrite += f"input folder: {inputFolder}{el}"
+    toWrite += f"c files output folder: {cOutFolder}{el}"
+    toWrite += f"log files output folder: {logOutFolder}{el}"
+    toWrite += f"starting depth: {startingDepth}{el}"
+    toWrite += f"depth step: {depthStep}{el}"
+    toWrite += f"max depth: {maxDepth}{el}"
+    toWrite += f"manual depth: {manualDepth}{el}"
+    toWrite += f"verbose: {verbose}{el}"
+    toWrite += f"concise: {concise}{el}"
+    toWrite += f"p timeout: {pTimeout}{el}"
+    toWrite += f"d timeout: {dTimeout}{el}"
+    toWrite += f"geo allocation: {geoAllocation}{el}"
+    toWrite += f"state size: {(stateSize * 100)}%{el}"
+    toWrite += f"problem number: {problemNum}{el}"
+    toWrite += f"number of problems: {numProblems}{el}"
     toWrite += lineBreak
     for prob in problemsRun:
         toWrite += prob + el
-    saveFile = open("save.txt", "w")
-    saveFile.write(toWrite)
-    saveFile.close()
+    with open("save.txt", "w") as saveFile:
+        saveFile.write(toWrite)
 
 def load():
     try:
-        saveFile = open("save.txt", "r")
-        lineBreak = "<><><><><><><><><>\n"
-        parts = saveFile.read().split(lineBreak)
-        arguments = parts[0].splitlines()
-        problems = parts[1].splitlines()
-        saveFile.close()
-        inputFolder = arguments[0]
-        cOutFolder = arguments[1]
-        logOutFolder = arguments[2]
-        global startingDepth
-        startingDepth = int(arguments[3])
-        global depthStep
-        depthStep = int(arguments[4])
-        global maxDepth
-        maxDepth = int(arguments[5])
-        global manualDepth
-        manualDepth = int(arguments[6])
-        global verbose
-        verbose = eval(arguments[7])
-        global concise
-        concise = eval(arguments[8])
-        global pTimeout
-        pTimeout = int(arguments[9])
-        global dTimeout
-        dTimeout = int(arguments[10])
-        global geoAllocation
-        geoAllocation = int(arguments[11])
-        global stateSize
-        stateSize = int(arguments[12])
-        problemNum = int(arguments[13])
-        numProblems = int(arguments[14])
+        with open("save.txt", "r") as saveFile:
+            lineBreak = "<><><><><><><><><>\n"
+            parts = saveFile.read().split(lineBreak)
+            arguments = parts[0].splitlines()
+            problems = parts[1].splitlines()
+        global startingDepth, depthStep, maxDepth, manualDepth, verbose, concise, pTimeout, dTimeout, geoAllocation, stateSize
+        inputFolder = arguments[0].split(": ")[1]
+        cOutFolder = arguments[1].split(": ")[1]
+        logOutFolder = arguments[2].split(": ")[1]
+        startingDepth = int(arguments[3].split(": ")[1])
+        depthStep = int(arguments[4].split(": ")[1])
+        maxDepth = int(arguments[5].split(": ")[1])
+        manualDepth = int(arguments[6].split(": ")[1])
+        verbose = eval(arguments[7].split(": ")[1])
+        concise = eval(arguments[8].split(": ")[1])
+        pTimeout = int(arguments[9].split(": ")[1])
+        dTimeout = int(arguments[10].split(": ")[1])
+        geoAllocation = float(arguments[11].split(": ")[1])
+        percentageStateSize = int(float(arguments[12].split(": ")[1][:-1]))
+        stateSize = percentageStateSize / 100
+        problemNum = int(arguments[13].split(": ")[1])
+        numProblems = int(arguments[14].split(": ")[1])
         return problems, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems
     except FileNotFoundError as err:
         print("save file not found", file=sys.stderr)
         raise err
+
 def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, domainFile, positionInfo = None):
     #first step write the c program
     if positionInfo is None:
         print("writing c program")
     else:
-        print("writing c program " + str(positionInfo[0]) + "/" + str(positionInfo[1]))
-    programDetails = writeProgram(parsedProblem, cOutFolder, stateSize)
-    cFile = programDetails[0]
-    problemName = programDetails[3]
-    realStateSize = programDetails[1]
-    objectToNum = programDetails[2]
+        print(f"writing c program {positionInfo[0]}/{positionInfo[1]}")
+    cFile, realStateSize, objectToNum, problemName = writeProgram(parsedProblem, cOutFolder, stateSize)
     oldActionNames = list()
     newActionNames = list()
     for act in parsedProblem.actions:
@@ -96,14 +82,15 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
     #second step solve the c program
     cName = str(cFile).split("/")[-1]
     if concise:
-        print("solving " + problemName + " with CBMC")
+        print(f"solving {problemName} with CBMC")
     else:
-        print("solving " + problemName + " with CBMC:")
+        print(f"solving {problemName} with CBMC:")
     results = solve(cFile, maxDepth, manualDepth, startingDepth, depthStep, oldActionNames, newActionNames,
                     objectToNum, concise, verbose, pTimeout, dTimeout, geoAllocation)
     #third step validate the solution
+    stopExecution = False
     if bool(results[0]):
-        print("validating plan to solve " + cName + ":")
+        print(f"validating plan to solve {cName}:")
         valid = validate(results[0], domainFile, problemFile, verbose)
         if valid:
             print("\tplan valid")
@@ -111,9 +98,11 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
             print("\tplan invalid")
     else:
         valid = False
+    if stopOnInvalid and not valid:
+        stopExecution = True
     #fourth step write the logs
-    problemLogs = writeLogs(problemName, logOutFolder, results, valid, stateSize, realStateSize, pTimeout, dTimeout, maxDepth)
-    return problemLogs
+    problemLogs = writeLogs(problemName, logOutFolder, results, valid, stateSize, realStateSize, pTimeout, dTimeout, maxDepth, geoAllocation)
+    return problemLogs, stopExecution
 
 def sorted_nicely( l ):
     """function by Mark Byers
@@ -125,31 +114,29 @@ def sorted_nicely( l ):
 
 def run():
     logs = list()
-    allowedRequirements = [":strips", ":typing", ":equality", ":disjunctive-preconditions"]
-    # TODO, ":negation", ":conditional-effects", ":negative-preconditions", ":universal-preconditions",
-    #  ":quantified-preconditions", ":existential-preconditions", ":adl", ":derived-predicates", ":action-costs",
-    #  ":fluents", ":numeric-fluents", ":domain-axioms", ":safety-constraints", ":ucpop"]
+    allowedRequirements = [":strips", ":typing", ":equality", ":disjunctive-preconditions", ":negation",
+                           ":negative-preconditions"]
+    # TODO, ":conditional-effects", ":universal-preconditions", ":quantified-preconditions",
+    #  ":existential-preconditions", ":adl", ":derived-predicates", ":action-costs",":fluents", ":numeric-fluents",
+    #  ":domain-axioms", ":safety-constraints", ":ucpop"]
 
     # unimplemented requirements needed by supurviser domains:
-    # cave-diving: conditional-effects negative-preconditions action-costs
-    # GED: adl(quantified-preconditions(universal-preconditions existential-preconditions) conditional-effects) derived-predicates fluents action-costs functions(numeric-fluents)
-    # pipesworld-tankage: no extra requirements
+    # cave-diving: conditional-effects  action-costs
+    # GED: adl(quantified-preconditions(universal-preconditions existential-preconditions) conditional-effects)
+    #   derived-predicates fluents action-costs functions(numeric-fluents)
+    # I don't think that this can support action-costs as CBMC does not support them
+    # Fully supported:
+    # pipesworld-tankage: n/a
 
-    # requirements not currently planned to be implemented
-    # :action-expansions :foreach-expansions :dag-expansions :subgoals-through-axioms :expression-evaluation
-    # :open-world :true-negation :durative-actions :durative-inequalities :continuous-effects :timed-initial-literals
-    # :preferences :constraints
+    # requirements not currently planned to be implemented:
+    #   :action-expansions :foreach-expansions :dag-expansions :subgoals-through-axioms :expression-evaluation
+    #   :open-world :true-negation :durative-actions :durative-inequalities :continuous-effects :timed-initial-literals
+    #   :preferences :constraints
     if multi:
         problemNum = None
         numProblems = None
-        if load:
-            results = load()
-            problemsRun = results[0]
-            inputFolder = results[1]
-            cOutFolder = results[2]
-            logOutFolder = results[3]
-            problemNum = results[4]
-            numProblems = results[5]
+        if loadBool:
+            problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems = load()
         else:
             inputFolder = domain
             problemsRun = list()
@@ -157,8 +144,8 @@ def run():
                 cOutFolder = "output/cFiles"
                 logOutFolder = "output/logs"
             else:
-                cOutFolder = str(inputFolder) + "/output/cFiles"
-                logOutFolder = str(inputFolder) + "/output/logs"
+                cOutFolder = f"{inputFolder}/output/cFiles"
+                logOutFolder = f"{inputFolder}/output/logs"
         files = os.listdir(inputFolder)
         pddlFiles = list()
         domainProblems = dict()
@@ -166,58 +153,56 @@ def run():
         problemFiles = list()
         files = sorted_nicely(files)
         for file in files:
-            if ".pddl" in file:
-                current = str(inputFolder) + "/" + file
+            if file.endswith(".pddl"):
+                current = f"{inputFolder}/{file}"
                 pddlFiles.append(current)
-                contents = open(current, "r").read()
+                with open(current, "r") as f:
+                    contents = f.read()
                 if "(define (domain " in contents:
-                    temp = contents
-                    temp = temp.split("(define (domain ")[1]
+                    temp = contents.split("(define (domain ")[1]
                     name = temp.split(")")[0]
-                    domains.update({name: current})
-                    domainProblems.update({name: list()})
+                    domains[name] = current
+                    domainProblems[name] = list()
                 else:
                     problemFiles.append(file)
         for pFile in problemFiles:
-            current = str(inputFolder) + "/" + pFile
-            contents = open(current, "r").read()
-            temp = contents
-            temp = temp.split("(:domain ")[1]
+            current = f"{inputFolder}/{pFile}"
+            with open(current, "r") as f:
+                contents = f.read()
+            temp = contents.split("(:domain ")[1]
             currentDomain = temp.split(")")[0]
-            for dom in domains:
-                if currentDomain == dom:
-                    domainProblems[dom].append(current)
-                    break
-        if not load:
+            if currentDomain in domains:
+                domainProblems[currentDomain].append(current)
+        if not loadBool:
             numProblems = len(problemFiles)
             problemNum = 1
-        runProblems = list()
         for dom in domains:
             problems = domainProblems[dom]
             for prob in problems:
                 if prob in problemsRun:
                     continue
-                print("combining Domain: " + domain + " with problem: " + problem)
                 parsedProblem = parse(domains[dom], prob)
                 for requirement in parsedProblem.requirements.requirements:
                     if requirement not in allowedRequirements:
                         raise ValueError(
-                            "Sorry the allowed requirements are currently limited and " + requirement + " is not allowed")
-                log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, prob, domains[dom], (problemNum, numProblems))
+                            f"Sorry the allowed requirements are currently limited and {requirement} is not allowed")
+                log, stopExecution = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, prob, domains[dom], (problemNum, numProblems))
                 problemNum += 1
-                runProblems.append(prob)
-                save(prob, cOutFolder, logOutFolder, problemNum, numProblems)
+                problemsRun.append(prob)
+                save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems)
                 logs.append(log)
+                if stopExecution:
+                    break
     else:
-        print("combining Domain: " + domain + " with problem: " + problem)
+        print(f"Combining Domain: {domain} with problem: {problem}")
         parsedProblem = parse(domain, problem)
         rootFolder = problem.rsplit("/", 1)[0]
         for requirement in parsedProblem.requirements.requirements:
             if requirement not in allowedRequirements:
                 raise ValueError(
-                    "Sorry the allowed requirements are currently limited and " + requirement + " is not allowed")
-        cOutFolder =  rootFolder + "/output/cFiles"
-        logOutFolder = rootFolder + "/output/logs"
+                    f"Sorry the allowed requirements are currently limited and {requirement} is not allowed")
+        cOutFolder = f"{rootFolder}/output/cFiles"
+        logOutFolder = f"{rootFolder}/output/logs"
         log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problem, domain)
         logs.append(log)
     if not concise:
@@ -225,11 +210,13 @@ def run():
         print("\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/")
         for log in logs:
             if not first:
-                print("******************")
-            if "failed" in log:
-                print(log)
+                print("")
             else:
-                print(log)
+                first = False
+            if verbose:
+                print(log[0])
+            else:
+                print(log[1])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='cbmcPlan',
@@ -265,8 +252,11 @@ if __name__ == "__main__":
                         help='Enable concise output on the command line')
     parser.add_argument('-l', '--load', action='store_true', default=False,
                         help='Continue execution from where it was interrupted')
+    parser.add_argument('-si', '--stopOnInvalid', action='store_true', default=False,
+                        help='stops the program execution on the first invalid solution found, instead of continuing')
     args = parser.parse_args()
-    if bool(args.domain) ^ bool(args.problem):
+    #XOR check
+    if bool(args.domain) != bool(args.problem):
         parser.error('--domain and --problem must be given together')
     elif bool(args.domain) and bool(args.problem) and not bool(args.folder):
         domain = args.domain
@@ -274,18 +264,18 @@ if __name__ == "__main__":
         multi = False
     else:
         if bool(args.domain) and bool(args.problem):
-            parser.error("You should specify either singular files, or folder location, assuming you want to batch "
-                         "process from file location")
+            parser.error("Specify either singular files or folder location for batch processing")
         if bool(args.folder):
             inFolder = args.folder
         else:
             inFolder = "input"
-            os.makedirs(inFolder, exist_ok=True)
+        os.makedirs(inFolder, exist_ok=True)
         multi = True
         domain = inFolder
         problem = domain
     if bool(args.geometricAllocation) and (not bool(args.maxDepth) or not bool(args.problemTimeout)):
         parser.error('if using --geometricAllocation, must set a --maxDepth and a --problemTimeout')
+
     startingDepth = args.startingDepth
     depthStep = args.depthStep
     maxDepth = args.maxDepth
@@ -296,17 +286,18 @@ if __name__ == "__main__":
     dTimeout = args.depthTimeout
     geoAllocation = args.geometricAllocation
     stateSize = args.stateSize
-    load = args.load
-    with keep.running():
-        startTime = timeit.default_timer()
-        run()
-        endTime = timeit.default_timer()
-        time = endTime - startTime
-        time = datetime.timedelta(seconds=time)
-        time = str(time).split(".")[0]
-        print("/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\")
-        print("overall run time(H:MM:SS): " + str(time))
-        # TODO: madagascar: test problems in another planning tool to get plan lengths
-        # TODO: Implement Regression Testing
-        # TODO: test each problem with different depths, timeouts, and state sizes then make graph
-        # TODO: write report
+    loadBool = args.load
+    stopOnInvalid = args.stopOnInvalid
+
+    startTime = timeit.default_timer()
+    run()
+    endTime = timeit.default_timer()
+    time = endTime - startTime
+    time = datetime.timedelta(seconds=time)
+    time = str(time).split(".")[0]
+    print("/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\")
+    print("overall run time(H:MM:SS): " + str(time))
+    # TODO: madagascar: test problems in another planning tool to get plan lengths
+    # TODO: Implement Regression Testing
+    # TODO: test each problem with different depths, timeouts, and state sizes then make graph
+    # TODO: write report

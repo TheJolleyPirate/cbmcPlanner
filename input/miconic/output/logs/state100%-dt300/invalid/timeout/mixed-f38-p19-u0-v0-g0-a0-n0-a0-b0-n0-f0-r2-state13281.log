@@ -1,0 +1,67 @@
+mixed-f38-p19-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 FAILED
+	reason failed: timeout
+problem details:
+	state size: 13281
+	depth timeout: 300
+with
+	no plan found
+	depth: 58
+	time: 300.00 seconds
+history:
+	0: depth 1 in 0.76 seconds
+	1: depth 2 in 0.73 seconds
+	2: depth 3 in 0.68 seconds
+	3: depth 4 in 0.69 seconds
+	4: depth 5 in 0.67 seconds
+	5: depth 6 in 0.68 seconds
+	6: depth 7 in 0.68 seconds
+	7: depth 8 in 0.67 seconds
+	8: depth 9 in 0.71 seconds
+	9: depth 10 in 0.73 seconds
+	10: depth 11 in 0.69 seconds
+	11: depth 12 in 0.72 seconds
+	12: depth 13 in 0.69 seconds
+	13: depth 14 in 0.68 seconds
+	14: depth 15 in 0.74 seconds
+	15: depth 16 in 0.69 seconds
+	16: depth 17 in 0.70 seconds
+	17: depth 18 in 0.72 seconds
+	18: depth 19 in 0.67 seconds
+	19: depth 20 in 0.68 seconds
+	20: depth 21 in 0.71 seconds
+	21: depth 22 in 0.75 seconds
+	22: depth 23 in 0.67 seconds
+	23: depth 24 in 0.73 seconds
+	24: depth 25 in 0.72 seconds
+	25: depth 26 in 0.72 seconds
+	26: depth 27 in 0.72 seconds
+	27: depth 28 in 0.72 seconds
+	28: depth 29 in 0.70 seconds
+	29: depth 30 in 0.69 seconds
+	30: depth 31 in 0.69 seconds
+	31: depth 32 in 0.66 seconds
+	32: depth 33 in 0.69 seconds
+	33: depth 34 in 0.67 seconds
+	34: depth 35 in 0.82 seconds
+	35: depth 36 in 0.71 seconds
+	36: depth 37 in 0.67 seconds
+	37: depth 38 in 0.67 seconds
+	38: depth 39 in 0.74 seconds
+	39: depth 40 in 0.69 seconds
+	40: depth 41 in 0.71 seconds
+	41: depth 42 in 0.73 seconds
+	42: depth 43 in 0.71 seconds
+	43: depth 44 in 0.73 seconds
+	44: depth 45 in 0.67 seconds
+	45: depth 46 in 0.69 seconds
+	46: depth 47 in 0.71 seconds
+	47: depth 48 in 0.73 seconds
+	48: depth 49 in 0.67 seconds
+	49: depth 50 in 0.69 seconds
+	50: depth 51 in 0.69 seconds
+	51: depth 52 in 0.71 seconds
+	52: depth 53 in 0.68 seconds
+	53: depth 54 in 0.68 seconds
+	54: depth 55 in 0.69 seconds
+	55: depth 56 in 0.76 seconds
+	56: depth 57 in 0.69 seconds

@@ -10,7 +10,7 @@ def validate(planList, domain, problem, verbose):
             first = False
         else:
             plan += "\n"
-        plan += str(actionNum) + ": (" + action + ")"
+        plan += f"{actionNum}: ({action})"
         actionNum += 1
     planFile = open("temp.txt", "w")
     planFile.write(plan)

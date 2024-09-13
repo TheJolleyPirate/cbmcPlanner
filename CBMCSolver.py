@@ -10,25 +10,23 @@ from LogWriter import writeLogs
 
 pTimeBool = False
 
-def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, lastStepTime):
+def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, lastStepTime, gAllocation):
     fileName = cFile.split("/")[-1]
     toProcess = False
     timeoutBool = False
-    planBool = False
+    stateBool = False
     if verbose:
         if not lastStepTime:
-            print("running " + fileName + " with depth " + str(depth))
+            print(f"\trunning {fileName} with depth {depth}")
         else:
             temp = "{:0.2f}".format(lastStepTime)
-            print("running " + fileName + " with depth " + str(depth) + ", previous depth time: " + str(temp)
-                  + " seconds")
+            print(f"\trunning {fileName} with depth {depth}, previous depth time: {temp} seconds")
     elif not concise:
         if not lastStepTime:
-            print("\r\trunning " + fileName + " with depth " + str(depth), end='')
+            print(f"\r\trunning {fileName} with depth {depth}", end='')
         else:
             temp = "{:0.2f}".format(lastStepTime)
-            print("\r\trunning " + fileName + " with depth " + str(depth) + ", previous depth time: " + str(temp)
-                  + " seconds", end='')
+            print(f"\r\trunning {fileName} with depth {depth}, previous depth time: {temp} seconds", end='')
     cmdList[-1] = str(depth)
     try:
         start = timeit.default_timer()
@@ -49,18 +47,19 @@ def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, last
         if "GOAL CHECKER: FAIL MEANS PLAN FOUND" in goalChecker[-1]:
             if not concise:
                 temp = "{:0.2f}".format(time)
-                print("\ntime: " + temp + " seconds")
+                print(f"\ntime: {temp} seconds")
             if verbose:
                 print(results)
             if len(goalChecker) > 1:
                 toProcess = goalChecker[-2]
             else:
-                planBool = True
+                stateBool = True
     except subprocess.TimeoutExpired:
-        print("")
-        timeoutBool = True
+        if gAllocation <= 1:
+            print("")
+            timeoutBool = True
         time = timeout
-    return toProcess, time, timeoutBool, planBool
+    return toProcess, time, timeoutBool, stateBool
 
 def problemTimeout(pTimeout):
     sleep(pTimeout)
@@ -80,6 +79,7 @@ def solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dtimeout, 
     timeoutBool = False
     currentTime = 0
     history = list()
+    d = dtimeout
     while True:
         if bool(maxDepth):
             if depth >= maxDepth:
@@ -88,18 +88,20 @@ def solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dtimeout, 
         if gAllocation > 1:
             d = currentTimeout(relativeCurrentDepth, relativeMaxDepth, pTimeout, gAllocation)
             relativeCurrentDepth += 1
-        else:
-            d = dtimeout
-        results = individualSolver(cFile, cmdList, depth, d, concise, verbose, currentTime)
+        results = individualSolver(cFile, cmdList, depth, d, concise, verbose, currentTime, gAllocation)
         currentTime = results[1]
-        if bool(results[0]) or bool(results[2]) or pTimeBool or bool(results[3]):
+        planFound = bool(results[0])
+        stateBool = results[3]
+        if gAllocation <= 1:
+            timeoutBool = results[2]
+        if planFound or timeoutBool or pTimeBool or stateBool:
             toProcess = results[0]
             timeoutBool = results[2]
             break
         else:
             temp = (currentTime, depth)
             history.append(temp)
-    return toProcess, currentTime, timeoutBool, depth, history
+    return toProcess, currentTime, timeoutBool, depth, history, d
 
 def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, newActionNames, objectToNum, concise,
           verbose, pTimeout, dTimeout, gAllocation):
@@ -114,7 +116,7 @@ def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, n
             results = solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dTimeout, cFile, cmdList,
                                 concise, verbose)
             probTimer.terminate()
-            probTimer.close()
+            probTimer.join()
         else:
             results = solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dTimeout, cFile, cmdList,
                                 concise, verbose)
@@ -123,12 +125,14 @@ def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, n
         timeoutBool = results[2]
         depth = results[3]
         history = results[4]
+        timeout = results[5]
     else:
         depth = manualDepth
-        results = individualSolver(cFile, cmdList, depth, dTimeout, concise, verbose, False)
+        results = individualSolver(cFile, cmdList, depth, dTimeout, concise, verbose, False, 0)
         toProcess = results[0]
         finalTime = results[1]
         timeoutBool = results[2]
+        timeout = results[5]
         history = None
     if bool(toProcess) and not timeoutBool:
         lines = toProcess.splitlines()
@@ -159,13 +163,13 @@ def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, n
                     var = objectToNum[int(varNum)]
                     action += " " + var
                 planList.append(action)
-        print("found plan: " + str(planList))
+        print(f"found plan: {planList}")
         planInfo = planList
     else:
         if timeoutBool:
-            print("timeout: " + str(dTimeout) + " seconds")
+            print(f"timeout: {timeout} seconds")
         else:
-            print("no plan found with max depth: " + str(maxDepth))
+            print(f"no plan found with max depth: {maxDepth}")
         planInfo = False
     return planInfo, depth, finalTime, timeoutBool, history
 
@@ -250,5 +254,8 @@ if __name__ == "__main__":
     else:
         valid = None
     # TODO: get problem state size from c file
-    log = writeLogs(name, logOutFolder, r, valid, "unkown", stateSize, pt, dt, md)
-    print(log)
+    logs = writeLogs(name, logOutFolder, r, valid, "unkown", stateSize, pt, dt, md)
+    if v:
+        print(logs[0])
+    else:
+        print(logs[1])

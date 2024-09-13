@@ -1,0 +1,94 @@
+p39-net4-b22-g7_rt0_instance FAILED
+	reason failed: timeout
+problem details:
+	state size: 9101
+	depth timeout: 300
+with
+	no plan found
+	depth: 85
+	time: 300.00 seconds
+history:
+	0: depth 1 in 3.31 seconds
+	1: depth 2 in 4.34 seconds
+	2: depth 3 in 5.20 seconds
+	3: depth 4 in 6.10 seconds
+	4: depth 5 in 6.95 seconds
+	5: depth 6 in 7.73 seconds
+	6: depth 7 in 8.55 seconds
+	7: depth 8 in 9.69 seconds
+	8: depth 9 in 10.31 seconds
+	9: depth 10 in 11.17 seconds
+	10: depth 11 in 12.03 seconds
+	11: depth 12 in 13.31 seconds
+	12: depth 13 in 13.74 seconds
+	13: depth 14 in 15.16 seconds
+	14: depth 15 in 15.59 seconds
+	15: depth 16 in 17.00 seconds
+	16: depth 17 in 17.28 seconds
+	17: depth 18 in 18.17 seconds
+	18: depth 19 in 19.79 seconds
+	19: depth 20 in 20.51 seconds
+	20: depth 21 in 20.78 seconds
+	21: depth 22 in 22.36 seconds
+	22: depth 23 in 23.09 seconds
+	23: depth 24 in 23.90 seconds
+	24: depth 25 in 25.15 seconds
+	25: depth 26 in 25.95 seconds
+	26: depth 27 in 25.99 seconds
+	27: depth 28 in 27.66 seconds
+	28: depth 29 in 27.91 seconds
+	29: depth 30 in 30.04 seconds
+	30: depth 31 in 29.81 seconds
+	31: depth 32 in 30.59 seconds
+	32: depth 33 in 31.38 seconds
+	33: depth 34 in 32.38 seconds
+	34: depth 35 in 33.16 seconds
+	35: depth 36 in 35.07 seconds
+	36: depth 37 in 35.14 seconds
+	37: depth 38 in 36.09 seconds
+	38: depth 39 in 36.94 seconds
+	39: depth 40 in 38.76 seconds
+	40: depth 41 in 39.38 seconds
+	41: depth 42 in 39.19 seconds
+	42: depth 43 in 41.23 seconds
+	43: depth 44 in 41.16 seconds
+	44: depth 45 in 43.13 seconds
+	45: depth 46 in 42.76 seconds
+	46: depth 47 in 45.02 seconds
+	47: depth 48 in 44.61 seconds
+	48: depth 49 in 45.45 seconds
+	49: depth 50 in 46.73 seconds
+	50: depth 51 in 47.38 seconds
+	51: depth 52 in 49.61 seconds
+	52: depth 53 in 48.94 seconds
+	53: depth 54 in 51.25 seconds
+	54: depth 55 in 51.28 seconds
+	55: depth 56 in 53.18 seconds
+	56: depth 57 in 52.56 seconds
+	57: depth 58 in 54.16 seconds
+	58: depth 59 in 55.00 seconds
+	59: depth 60 in 56.56 seconds
+	60: depth 61 in 56.35 seconds
+	61: depth 62 in 58.23 seconds
+	62: depth 63 in 58.77 seconds
+	63: depth 64 in 58.70 seconds
+	64: depth 65 in 59.65 seconds
+	65: depth 66 in 61.87 seconds
+	66: depth 67 in 62.60 seconds
+	67: depth 68 in 63.82 seconds
+	68: depth 69 in 64.68 seconds
+	69: depth 70 in 65.52 seconds
+	70: depth 71 in 66.20 seconds
+	71: depth 72 in 67.14 seconds
+	72: depth 73 in 67.90 seconds
+	73: depth 74 in 67.78 seconds
+	74: depth 75 in 68.87 seconds
+	75: depth 76 in 69.22 seconds
+	76: depth 77 in 70.49 seconds
+	77: depth 78 in 71.27 seconds
+	78: depth 79 in 73.83 seconds
+	79: depth 80 in 72.76 seconds
+	80: depth 81 in 76.58 seconds
+	81: depth 82 in 74.51 seconds
+	82: depth 83 in 75.47 seconds
+	83: depth 84 in 78.15 seconds

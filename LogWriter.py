@@ -1,6 +1,6 @@
 from pathlib import Path
 
-def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realStateSize, pTimeout, dTimeout, maximumDepth):
+def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realStateSize, pTimeout, dTimeout, maximumDepth, gAllocation):
     plan = results[0]
     depth = results[1]
     finalTime = results[2]
@@ -10,65 +10,71 @@ def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realState
         temp = ""
         counter = 0
         for action in plan:
-            temp += str(counter) + ": (" + action + ") "
+            temp += f"{counter}: ({action}) "
             counter += 1
         plan = temp
-    logs = ""
+    fileLogs = ""
     problemDetails = "problem details:\n"
-    problemDetails += "\tstate size: " + str(realStateSize) + "\n"
+    problemDetails += f"\tstate size: {realStateSize}\n"
     if bool(pTimeout):
-        problemDetails += "\tproblem timeout: " + str(pTimeout) + "\n"
+        problemDetails += f"\tproblem timeout: {pTimeout}\n"
     if bool(dTimeout):
-        problemDetails += "\tdepth timeout: " + str(dTimeout) + "\n"
+        problemDetails += f"\tdepth timeout: {dTimeout}\n"
     if bool(maximumDepth):
-        problemDetails += "\tmaximum depth: " + str(maximumDepth) + "\n"
+        problemDetails += f"\tmaximum depth: {maximumDepth}\n"
+    if gAllocation > 1:
+        problemDetails += f"\tgeometric series common factor: {gAllocation}\n"
     if valid is None:
-        logs += problem + " validaty unkown (not yet checked)\n"
-        logs += problemDetails
-        logs += "with:\n"
-        logs += "\tplan: " + str(plan) + "\n"
+        fileLogs += f"{problem} validaty unknown (not yet checked)\n"
+
+        fileLogs += problemDetails
+        fileLogs += "with:\n"
+        fileLogs += f"\tplan: {plan}\n"
     elif valid:
-        logs += problem + " SOLVED!\n"
-        logs += problemDetails
-        logs += "with:\n"
-        logs += "\tplan: " + str(plan) + "\n"
+        fileLogs += f"{problem} SOLVED!\n"
+        fileLogs += problemDetails
+        fileLogs += "with:\n"
+        fileLogs += f"\tplan: {plan}\n"
     else:
-        logs += problem + " FAILED\n"
-        logs += "\treason failed: "
+        fileLogs += f"{problem} FAILED\n"
+        fileLogs += "\treason failed: "
         if timeoutBool:
-            logs += "timeout\n"
+            fileLogs += "timeout\n"
         elif depth >= maximumDepth:
-            logs += "depth out\n"
+            fileLogs += "depth out\n"
         elif not bool(plan):
-            logs += "no plan found\n"
+            fileLogs += "no plan found\n"
         else:
-            logs += "invalid plan\n"
-        logs += problemDetails
-        logs += "with\n"
+            fileLogs += "invalid plan\n"
+        fileLogs += problemDetails
+        fileLogs += "with\n"
         if not timeoutBool and bool(plan):
-            logs += "\tplan: " + str(plan) + "\n"
+            fileLogs += f"\tplan: {plan}\n"
         elif timeoutBool and not bool(plan):
-            logs += "\tno plan found\n"
-    logs += "\tdepth: " + str(depth) + "\n"
+            fileLogs += "\tno plan found\n"
+    fileLogs += f"\tdepth: {depth}\n"
     if finalTime is not None:
         time = "{:0.2f}".format(finalTime)
-        logs += "\ttime: " + time + " seconds\n"
+        fileLogs += f"\ttime: {time} seconds\n"
+    else:
+        time = "n/a"
     if history is not None:
-        logs += "history:\n"
+        fileLogs += "history:\n"
         for i in range(len(history)):
             current = history[i]
             runTime = "{:0.2f}".format(current[0])
             runDepth = current[1]
-            logs += "\t" + str(i) + ": depth " + str(runDepth) + " in " + runTime + " seconds\n"
-
+            fileLogs += f"\t{i}: depth {runDepth} in {runTime} seconds\n"
     stateSizePercentage = "{:.0%}".format(problemStateSize)
-    logOutFolder += "/state" + str(stateSizePercentage)
+    logOutFolder += f"/state{stateSizePercentage}"
     if maximumDepth:
-        logOutFolder += "-md" + str(maximumDepth)
+        logOutFolder += f"-md{maximumDepth}"
     if pTimeout:
-        logOutFolder += "-pT" + str(pTimeout)
+        logOutFolder += f"-pt{pTimeout}"
     if dTimeout:
-        logOutFolder += "-dT" + str(dTimeout)
+        logOutFolder += f"-dt{dTimeout}"
+    if gAllocation > 1:
+        logOutFolder += f"-ga{gAllocation}"
     if valid:
         logOutFolder += "/valid"
     else:
@@ -79,8 +85,12 @@ def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realState
         else:
             logOutFolder += "/invalid/invalidPlan"
     Path(logOutFolder).mkdir(parents=True, exist_ok=True)
-    fileName = logOutFolder + "/" + problem + "-state" + str(realStateSize) + ".log"
-    logFile = open(fileName, "w")
-    logFile.write(logs)
-    logFile.close()
-    return logs
+    fileName = f"{logOutFolder}/{problem}-state{realStateSize}.log"
+    with open(fileName, "w") as logFile:
+        logFile.write(fileLogs)
+
+    if bool(plan):
+        printLogs = f"plan found for {problem} with depth {depth} and time {time} seconds\nplan: {plan}"
+    else:
+        printLogs = f"no plan found for {problem} with depth {depth} and time {time} seconds"
+    return fileLogs, printLogs

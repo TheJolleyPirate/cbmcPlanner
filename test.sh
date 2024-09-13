@@ -1,26 +1,13 @@
 #!/bin/bash
+: 'echo "Running: Runner.py -f input/for-graphs -md 20 -dt 0"
+python3 Runner.py -f input/for-graphs -md 20 -dt 0
+echo "Running: Runner.py -f input/for-graphs -s 0.8 -md 20 -dt 0"
+python3 Runner.py -f input/for-graphs -s 0.8 -md 20 -dt 0
+echo "Running: Runner.py -f input/for-graphs -s 0.6 -md 20 -dt 0"
+python3 Runner.py -f input/for-graphs -s 0.6 -md 20 -dt 0
+echo "Running: Runner.py -f input/for-graphs -s 0.4 -md 20 -dt 0"
+python3 Runner.py -f input/for-graphs -s 0.4 -md 20 -dt 0
+echo "Running: Runner.py -f input/for-graphs -s 0.2 -md 20 -dt 0"
+python3 Runner.py -f  input/for-graphs -s 0.2 -md 20 -dt 0'
 
-#python3 Runner.py -f input/blocks
-
-#python3 Runner.py -f input/blocks -s 0.8
-#python3 Runner.py -f input/blocks -s 0.6
-##python3 Runner.py -f input/blocks -s 0.4
-#python3 Runner.py -f input/blocks -s 0.2
-
-#python3 Runner.py -f input/blocks -dt 600
-
-#python3 Runner.py -f input/blocks -dt 600 -s 0.8
-#python3 Runner.py -f input/blocks -dt 600 -s 0.6
-#python3 Runner.py -f input/blocks -dt 600 -s 0.4
-#python3 Runner.py -f input/blocks -dt 600 -s 0.2
-
-#python3 Runner.py -f input/blocks -ga 1.25 -md 40
-
-#python3 Runner.py -f input/blocks -ga 1.25 -md 40 -s 0.8
-#python3 Runner.py -f input/blocks -ga 1.25 -md 40 -s 0.6
-#python3 Runner.py -f input/blocks -ga 1.25 -md 40 -s 0.4
-#python3 Runner.py -f input/blocks -ga 1.25 -md 40 -s 0.2
-
-python3 Runner.py -f input/miconic
-python3 Runner.py -f input/ged
-python3 Runner.py -f input/pipesworld-tankage
+python3 Runner.py -f input/miconic -dt 0 md 20

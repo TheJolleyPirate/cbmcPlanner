@@ -1,0 +1,50 @@
+p15-net2-b14-g4_rt0_instance FAILED
+	reason failed: timeout
+problem details:
+	state size: 2289
+	depth timeout: 300
+with
+	no plan found
+	depth: 41
+	time: 300.00 seconds
+history:
+	0: depth 1 in 9.93 seconds
+	1: depth 2 in 9.81 seconds
+	2: depth 3 in 9.76 seconds
+	3: depth 4 in 9.64 seconds
+	4: depth 5 in 9.67 seconds
+	5: depth 6 in 9.70 seconds
+	6: depth 7 in 9.51 seconds
+	7: depth 8 in 9.63 seconds
+	8: depth 9 in 9.51 seconds
+	9: depth 10 in 9.62 seconds
+	10: depth 11 in 9.57 seconds
+	11: depth 12 in 9.71 seconds
+	12: depth 13 in 9.37 seconds
+	13: depth 14 in 9.59 seconds
+	14: depth 15 in 9.88 seconds
+	15: depth 16 in 9.49 seconds
+	16: depth 17 in 9.78 seconds
+	17: depth 18 in 9.55 seconds
+	18: depth 19 in 9.68 seconds
+	19: depth 20 in 9.77 seconds
+	20: depth 21 in 9.59 seconds
+	21: depth 22 in 9.59 seconds
+	22: depth 23 in 9.53 seconds
+	23: depth 24 in 9.70 seconds
+	24: depth 25 in 9.75 seconds
+	25: depth 26 in 9.48 seconds
+	26: depth 27 in 9.50 seconds
+	27: depth 28 in 9.59 seconds
+	28: depth 29 in 9.62 seconds
+	29: depth 30 in 9.53 seconds
+	30: depth 31 in 9.69 seconds
+	31: depth 32 in 9.58 seconds
+	32: depth 33 in 9.65 seconds
+	33: depth 34 in 9.55 seconds
+	34: depth 35 in 9.62 seconds
+	35: depth 36 in 9.98 seconds
+	36: depth 37 in 9.60 seconds
+	37: depth 38 in 9.36 seconds
+	38: depth 39 in 9.55 seconds
+	39: depth 40 in 9.61 seconds

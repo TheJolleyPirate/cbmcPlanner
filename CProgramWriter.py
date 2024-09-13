@@ -1,10 +1,10 @@
 import argparse
 from pathlib import Path
-
 from ConditionParser import parseCondition
 from ParsePDDL import parse
 from externalTools.fastDownwardParser.pddl.tasks import Task
 from externalTools.fastDownwardParser.pddl.pddl_types import Type
+
 typeToNum = list()
 objectToNum = list()
 typeObjectNum = list()
@@ -12,30 +12,31 @@ numObjects = 0
 predicates = list()
 maxParameters = 0
 actionParameters = list()
+
+
 def intro(problem: Task, stateSize):
-    #this function writes the preamble of the c code and sets up the global variables
-    #writing some information for the solver
+    # This function writes the preamble of the c code and sets up the global variables
+    # Writing some information for the solver
     preStatecCode = "//PREAMBLE\n"
     preStatecCode += "//action translation:\n"
     for act in problem.actions:
         name = act.name
         newName = name.replace("-", "_")
-        preStatecCode += "//" + newName + "==" + name + "\n"
+        preStatecCode += f"//{newName}=={name}\n"
     preStatecCode += "//END OF PREAMBLE\n"
-    #included libraries
+    # Included libraries
     preStatecCode += "#include<stdio.h>\n"
     preStatecCode += "#include <stdlib.h>\n"
-    #CBMC indeterminate function
+    # CBMC indeterminate function
     # noinspection SpellCheckingInspection
     preStatecCode += "int nondet_Int();\n"
     preStatecCode += "//problem definition\n"
-    #setting up the state
+    # Setting up the state
     preStatecCode += "//state\n"
     cCode = "//reserve state[0] to always be false\n"
     cCode += "int nextIndex = 1;\n"
-
     cCode += "//objects\n"
-    #getting the types
+    # Getting the types
     types = list()
     objects = list()
     global typeToNum
@@ -45,27 +46,27 @@ def intro(problem: Task, stateSize):
         typeToNum.append(str(var))
         types.append(var)
         newVar = str(var).replace("-", "_")
-        objects.append("int " + newVar + "[] = {")
+        objects.append(f"int {newVar}[] = {{")
     objectNum = -1
     global objectToNum
     for var in problem.objects:
         objectNum += 1
         obj = str(var).split(": ")
         objectToNum.append(obj[0])
-        #the first type is all objects
+        # The first type is all objects
         typeObjectNum[0] += 1
         if str(objects[0]).split("{")[1] == "":
             objects[0] += str(objectNum)
         else:
-            objects[0] += ", " + str(objectNum)
-        #adding to other types
+            objects[0] += f", {objectNum}"
+        # Adding to other types
         for i in range(1, len(types)):
             if obj[1] == str(types[i]):
                 typeObjectNum[i] += 1
                 if str(objects[i]).split("{")[1] == "":
                     objects[i] += str(objectNum)
                 else:
-                    objects[i] += ", " + str(objectNum)
+                    objects[i] += f", {objectNum}"
                 if Type(types[i]).basetype_name is not None:
                     currentTypeName = Type(types[i]).basetype_name
                     while True:
@@ -78,7 +79,7 @@ def intro(problem: Task, stateSize):
                         if str(objects[num]).split("{")[1] == "":
                             objects[num] += str(objectNum)
                         else:
-                            objects[num] += ", " + str(objectNum)
+                            objects[num] += f", {objectNum}"
                         if Type(types[num]).basetype_name is not None:
                             currentTypeName = Type(types[num]).basetype_name
                         else:
@@ -103,29 +104,29 @@ def intro(problem: Task, stateSize):
     global predicates
     maxStateSize = 0
     for var in problem.predicates:
-        #get the predicate as a string
+        # Get the predicate as a string
         temp = str(var)
-        #remove the closing bracket
+        # Remove the closing bracket
         temp = temp[:-1]
-        #split around the starting bracket
+        # Split around the starting bracket
         temp = temp.split("(")
         name = temp[0]
-        #replace = with words
+        # Replace = with words
         if name == "=":
             name = "equals"
-        #replace - with _temp
+        # Replace - with _temp
         name = name.replace("-", "_")
         predicateElements = temp[1].split(", ")
         predicateTypes = list()
         tempString = ""
         elementSizes = list()
-        #making sure to only make variable an array if predicate has variable(s)
+        # Making sure to only make variable an array if predicate has variable(s)
         if len(predicateElements) > 1 or predicateElements[0] != "":
             for i in range(len(predicateElements)):
                 current = predicateElements[i].split(": ")[1]
                 predicateTypes.append(current)
-                tempString += "[" + str(objectNum + 1) + "]"
-                #getting the size of each element
+                tempString += f"[{objectNum + 1}]"
+                # Getting the size of each element
                 for j in range(len(typeToNum)):
                     if typeToNum[j] == current:
                         elementSizes.append(typeObjectNum[j])
@@ -136,53 +137,55 @@ def intro(problem: Task, stateSize):
                 tempNum *= ele
             maxStateSize += tempNum
         predicates.append((name, predicateTypes))
-        cCode += "int " + name + tempString + ";\n"
-    #state[0] is reserved to be always false
+        cCode += f"int {name}{tempString};\n"
+    # State[0] is reserved to be always false
     if stateSize <= 1:
         stateSize = int(maxStateSize * stateSize)
-        preStatecCode += "int n = " + str(stateSize + 1) + ";\n"
-        preStatecCode += "char state[" + str(stateSize + 1) + "];\n"
+        preStatecCode += f"int n = {stateSize + 1};\n"
+        preStatecCode += f"char state[{stateSize + 1}];\n"
     else:
-        preStatecCode += "int n = " + str(stateSize + 1) + ";\n"
-        preStatecCode += "char state[" + str(stateSize + 1) + "];\n"
+        preStatecCode += f"int n = {stateSize + 1};\n"
+        preStatecCode += f"char state[{stateSize + 1}];\n"
     cCode = preStatecCode + cCode
     return cCode, stateSize
 
+
 def indexFunctions():
-    #this writes the functions which assign places in the state function to different predicates as needed
+    # This writes the functions which assign places in the state function to different predicates as needed
     cCode = "\n//get index functions\n"
     global predicates
     for pred in predicates:
         name = str(pred[0])
-        cCode += "int getIndex_" + name + "("
+        cCode += f"int getIndex_{name}("
         indexString = ""
         for i in range(len(pred[1])):
-            cCode += "int x" + str(i) + ", "
-            indexString += "[x" + str(i) + "]"
+            cCode += f"int x{i}, "
+            indexString += f"[x{i}]"
         cCode += "int set){\n"
         cCode += "\tint index;\n"
-        cCode += "\tif(" + name + indexString + " < 0){\n"
+        cCode += f"\tif({name}{indexString} < 0){{\n"
         cCode += "\t\tif(set){\n"
         cCode += "\t\t\tif(nextIndex >= n) {\n"
         cCode += "\t\t\t\texit(-1);\n"
         cCode += "\t\t\t}\n"
         cCode += "\t\t\tindex = nextIndex;\n"
         cCode += "\t\t\tnextIndex += 1;\n"
-        cCode += "\t\t\t" + name + indexString + " = index;\n"
+        cCode += f"\t\t\t{name}{indexString} = index;\n"
         cCode += "\t\t}\n"
         cCode += "\t\telse{\n"
         cCode += "\t\t\tindex = 0;\n"
         cCode += "\t\t}\n"
         cCode += "\t}\n"
         cCode += "\telse{\n"
-        cCode += "\t\tindex = " + name + indexString + ";\n"
+        cCode += f"\t\tindex = {name}{indexString};\n"
         cCode += "\t}\n"
         cCode += "\treturn index;\n"
         cCode += "}\n"
     return cCode
 
+
 def actions(problem: Task):
-    #this writes the action functions
+    # This writes the action functions
     cCode = "\n//actions functions\n"
     probActions = problem.actions
     global objectToNum
@@ -192,8 +195,8 @@ def actions(problem: Task):
     for act in probActions:
         name = act.name
         name = name.replace("-", "_")
-        cCode += "void " + str(name) + "("
-        #adding action parameters
+        cCode += f"void {name}("
+        # Adding action parameters
         numParams = 0
         params = list()
         for param in act.parameters:
@@ -202,7 +205,7 @@ def actions(problem: Task):
             currentVar = temp[0]
             currentVar = currentVar[1:]
             currentVar = currentVar.replace("-", "_")
-            cCode += "int " + currentVar + ", "
+            cCode += f"int {currentVar}, "
             paramType = temp[1]
             if paramType == "":
                 paramType = "object"
@@ -212,10 +215,10 @@ def actions(problem: Task):
             maxParameters = numParams
         cCode = cCode[:-2]
         cCode += "){\n"
-        #adding action preconditions
+        # Adding action preconditions
         conditions = act.precondition.dumpToString()
-        cCode += "\tif(" + parseCondition(conditions, objectToNum) + "){\n"
-        #adding action effects
+        cCode += f"\tif({parseCondition(conditions, objectToNum)}){{\n"
+        # Adding action effects
         negativeEffects = ""
         positiveEffects = ""
         for eff in act.effects:
@@ -230,12 +233,12 @@ def actions(problem: Task):
             predicate = predicate.replace("-", "_")
             temp = temp[1][:-1]
             variables = temp.split(", ")
-            effectString = "\t\tstate[getIndex_" + predicate + "("
+            effectString = f"\t\tstate[getIndex_{predicate}("
             if len(variables) > 1 or variables[0] != "":
                 for var in variables:
                     temp = var[1:]
                     temp = temp.replace("-", "_")
-                    effectString += temp + ", "
+                    effectString += f"{temp}, "
             effectString += "1)] = "
             if isNegated == "Negated":
                 effectString += "0;\n"
@@ -251,27 +254,27 @@ def actions(problem: Task):
         cCode += "\t}\n"
         cCode += "\treturn;\n"
         cCode += "}\n"
-
     return cCode
 
+
 def predicateSetterRecursion(name, indicesLeft, tabs, subscript=0):
-    #this helps the main loop by using recursion
+    # This helps the main loop by using recursion
     global numObjects
     cCode = ""
     if indicesLeft > 0:
-        cCode += tabs + "for(int i" + str(subscript) + " = 0; i" + str(subscript) + " < " + str(
-            numObjects) + "; i" + str(subscript) + "++){\n"
+        cCode += f"{tabs}for(int i{subscript} = 0; i{subscript} < {numObjects}; i{subscript}++){{\n"
         cCode += predicateSetterRecursion(name, indicesLeft - 1, tabs + "\t", subscript + 1)
-        cCode += tabs + "}\n"
+        cCode += f"{tabs}}}\n"
     else:
         temp = ""
         for i in range(subscript):
-            temp += "[i" + str(i) + "]"
-        cCode += tabs + name + temp + " = -1;\n"
+            temp += f"[i{i}]"
+        cCode += f"{tabs}{name}{temp} = -1;\n"
     return cCode
 
+
 def boundsSetterRecursion(name, params, indicesLeft, tabs, subscript=0, oldInput=""):
-    #this sets the bounds for the object variables
+    # This sets the bounds for the object variables
     global typeToNum
     global typeObjectNum
     cCode = ""
@@ -282,37 +285,37 @@ def boundsSetterRecursion(name, params, indicesLeft, tabs, subscript=0, oldInput
                 current = i
                 break
         objectSize = typeObjectNum[current]
-        cCode += tabs + "index" + str(subscript) + " = nondet_Int();\n"
-        cCode += tabs + "if(index" + str(subscript) + " >= 0 && index" + str(subscript) + " < " + str(
-            objectSize) + "){\n"
+        cCode += f"{tabs}index{subscript} = nondet_Int();\n"
+        cCode += f"{tabs}if(index{subscript} >= 0 && index{subscript} < {objectSize}){{\n"
         param = str(params[subscript]).replace("-", "_")
-        newInput = oldInput + param + "[index" + str(subscript) + "], "
+        newInput = oldInput + f"{param}[index{subscript}], "
         cCode += boundsSetterRecursion(name, params, indicesLeft - 1, tabs + "\t", subscript + 1, newInput)
-        cCode += tabs + "}\n"
+        cCode += f"{tabs}}}\n"
     else:
         if len(oldInput) > 0:
             temp = oldInput[:-2]
         else:
             temp = ""
-        cCode += tabs + name + "(" + temp + ");\n"
+        cCode += f"{tabs}{name}({temp});\n"
     return cCode
+
 
 def mainLoop(problem: Task):
     cCode = "//main loop\n"
     cCode += "int main(){\n"
     global predicates
     global numObjects
-    #initilising predicates to -1
+    # Initilising predicates to -1
     for pred in predicates:
         name = pred[0]
         numIndices = len(pred[1])
-        cCode += "\t//setting " + name + " to -1\n"
+        cCode += f"\t//setting {name} to -1\n"
         cCode += predicateSetterRecursion(name, numIndices, "\t")
-    #setting initial state
+    # Setting initial state
     global objectToNum
     for init in problem.init:
         if "Atom" not in str(init):
-            raise ValueError("found something unexpected: " + str(init))
+            raise ValueError(f"found something unexpected: {init}")
         temp = str(init).split("Atom ")[1]
         temp = temp.split("(")
         predicate = temp[0]
@@ -322,7 +325,7 @@ def mainLoop(problem: Task):
         temp = temp[1]
         temp = temp[:-1]
         variables = temp.split(", ")
-        cCode += "\tstate[getIndex_" + predicate + "("
+        cCode += f"\tstate[getIndex_{predicate}("
         if len(variables) > 1 or variables[0] != "":
             for var in variables:
                 trueVar = None
@@ -330,13 +333,13 @@ def mainLoop(problem: Task):
                     if var == objectToNum[i]:
                         trueVar = i
                         break
-                cCode += str(trueVar) + ", "
+                cCode += f"{trueVar}, "
         cCode += "1)] = 1;\n"
     cCode += "\t//decision variables\n"
     cCode += "\tint actionDecision;\n"
     global maxParameters
     for i in range(maxParameters):
-        cCode += "\tint index" + str(i) + ";\n"
+        cCode += f"\tint index{i};\n"
     cCode += "\t//main loop\n"
     cCode += "\twhile(1 == 1){\n"
     cCode += "\t\t//choose action\n"
@@ -346,7 +349,7 @@ def mainLoop(problem: Task):
     global actionParameters
     for act in problem.actions:
         caseNum += 1
-        cCode += "\t\tcase " + str(caseNum) + ":\n "
+        cCode += f"\t\tcase {caseNum}:\n "
         name = act.name
         name = name.replace("-", "_")
         params = []
@@ -359,20 +362,21 @@ def mainLoop(problem: Task):
     cCode += "\t\t}\n"
     cCode += "\t\t//check if goal state reached\n"
     condition = problem.goal.dumpToString()
-    cCode += "\t\tif(" + parseCondition(condition, objectToNum) + "){\n"
+    cCode += f"\t\tif({parseCondition(condition, objectToNum)}){{\n"
     cCode += "\t\t\t__CPROVER_assert(1 == 0, \"GOAL CHECKER: FAIL MEANS PLAN FOUND\");\n"
     cCode += "\t\t}\n"
     cCode += "\t}\n"
     cCode += "}\n"
     return cCode
 
+
 def writeProgram(problem: Task, outputFolder, stateSize):
     problemName = problem.task_name
     problemName = problemName.replace("-", "-")
     stateSizePercentage = "{:.0%}".format(stateSize)
-    outputFolder += "/state" + stateSizePercentage
+    outputFolder += f"/state{stateSizePercentage}"
     Path(outputFolder).mkdir(parents=True, exist_ok=True)
-    fileName = outputFolder + "/" + problemName + ".c"
+    fileName = f"{outputFolder}/{problemName}.c"
     cFile = open(fileName, "w")
     temp = intro(problem, stateSize)
     cCode = temp[0]
@@ -400,16 +404,18 @@ def writeProgram(problem: Task, outputFolder, stateSize):
     return fileName, outStateSize, objectToNumTemp, problemName
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='PDDLtranslate', description="translates a PDDL problem into a CBMC solvable file")
+    parser = argparse.ArgumentParser(prog='PDDLtranslate',
+                                     description="translates a PDDL problem into a CBMC solvable file")
     parser.add_argument('-d', '--domain', type=str, required=True, help='the domain PDDL file')
     parser.add_argument('-p', '--problem', type=str, required=True, help='the problem PDDL file')
     parser.add_argument('-s', '--stateSize', type=float, default=1,
-                        help='state size; 0-1 percentage based: e.g. 0.2 = 20% max possible size, >1 sets static state size')
+                        help='state size; 0-1 percentage based: e.g. 0.2 = 20% max possible size, >1 sets static state '
+                             'size')
     args = parser.parse_args()
     d = args.domain
     p = args.problem
     s = args.stateSize
     parsedProblem = parse(d, p)
     rootFolder = p.rsplit("/", 1)[0]
-    cOutFolder = rootFolder + "/output/cFiles"
+    cOutFolder = f"{rootFolder}/output/cFiles"
     writeProgram(parsedProblem, cOutFolder, s)

@@ -1,0 +1,72 @@
+p23-net3-b14-g3_rt0_instance FAILED
+	reason failed: timeout
+problem details:
+	state size: 5130
+	depth timeout: 300
+with
+	no plan found
+	depth: 63
+	time: 300.00 seconds
+history:
+	0: depth 1 in 36.42 seconds
+	1: depth 2 in 36.47 seconds
+	2: depth 3 in 36.27 seconds
+	3: depth 4 in 36.17 seconds
+	4: depth 5 in 35.88 seconds
+	5: depth 6 in 36.34 seconds
+	6: depth 7 in 36.17 seconds
+	7: depth 8 in 36.43 seconds
+	8: depth 9 in 36.77 seconds
+	9: depth 10 in 36.66 seconds
+	10: depth 11 in 36.19 seconds
+	11: depth 12 in 36.21 seconds
+	12: depth 13 in 35.89 seconds
+	13: depth 14 in 36.32 seconds
+	14: depth 15 in 36.03 seconds
+	15: depth 16 in 36.57 seconds
+	16: depth 17 in 36.40 seconds
+	17: depth 18 in 36.24 seconds
+	18: depth 19 in 36.13 seconds
+	19: depth 20 in 35.91 seconds
+	20: depth 21 in 36.09 seconds
+	21: depth 22 in 36.34 seconds
+	22: depth 23 in 36.21 seconds
+	23: depth 24 in 35.89 seconds
+	24: depth 25 in 36.70 seconds
+	25: depth 26 in 36.14 seconds
+	26: depth 27 in 36.24 seconds
+	27: depth 28 in 36.13 seconds
+	28: depth 29 in 36.34 seconds
+	29: depth 30 in 36.50 seconds
+	30: depth 31 in 35.85 seconds
+	31: depth 32 in 35.96 seconds
+	32: depth 33 in 36.40 seconds
+	33: depth 34 in 36.19 seconds
+	34: depth 35 in 36.34 seconds
+	35: depth 36 in 36.68 seconds
+	36: depth 37 in 36.56 seconds
+	37: depth 38 in 36.10 seconds
+	38: depth 39 in 36.40 seconds
+	39: depth 40 in 36.23 seconds
+	40: depth 41 in 36.47 seconds
+	41: depth 42 in 36.82 seconds
+	42: depth 43 in 36.42 seconds
+	43: depth 44 in 36.53 seconds
+	44: depth 45 in 36.11 seconds
+	45: depth 46 in 36.22 seconds
+	46: depth 47 in 36.51 seconds
+	47: depth 48 in 36.47 seconds
+	48: depth 49 in 36.17 seconds
+	49: depth 50 in 36.04 seconds
+	50: depth 51 in 36.48 seconds
+	51: depth 52 in 36.39 seconds
+	52: depth 53 in 36.00 seconds
+	53: depth 54 in 36.32 seconds
+	54: depth 55 in 36.33 seconds
+	55: depth 56 in 36.42 seconds
+	56: depth 57 in 35.90 seconds
+	57: depth 58 in 36.34 seconds
+	58: depth 59 in 36.61 seconds
+	59: depth 60 in 36.36 seconds
+	60: depth 61 in 36.70 seconds
+	61: depth 62 in 36.28 seconds

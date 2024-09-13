@@ -1,0 +1,12 @@
+mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r0 SOLVED!
+problem details:
+	state size: 20
+	depth timeout: 300
+with:
+	plan: 0: (up f0 f1) 1: (board f1 p0) 2: (down f1 f0) 3: (depart f0 p0) 
+	depth: 4
+	time: 0.98 seconds
+history:
+	0: depth 1 in 0.10 seconds
+	1: depth 2 in 0.09 seconds
+	2: depth 3 in 0.10 seconds
