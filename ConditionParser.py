@@ -1,17 +1,54 @@
+objectToNum = list()
 
-def parseAtom(condition: str, objectToNum: list):
+def __separateBrackets(inputString: str, bracketType="{}"):
+    """
+    Separates the input string into segments based on the specified bracket type.
+    """
+    separated = list()
+    numOpen = 0
+    currentStr = ""
+    openBracket = bracketType[0]
+    closeBracket = bracketType[1]
+
+    for c in inputString:
+        if c == openBracket:
+            numOpen += 1
+        elif c == closeBracket:
+            numOpen -= 1
+
+        currentStr += c
+
+        if numOpen == 0:
+            separated.append(currentStr)
+            currentStr = ""
+        elif numOpen < 0:
+            raise ValueError("More closing brackets than opening in one of the conditions")
+
+    if numOpen > 0:
+        raise ValueError("More opening brackets than closing in one of the conditions")
+
+    return separated
+
+def __parseAtom(condition: str):
+    """
+    Parses an atomic condition and returns the corresponding C code representation.
+    """
     cCode = ""
     temp = condition.split("Atom ")
     temp = temp[1].split("(")
     predicate = temp[0]
-    if str(predicate) == "=":
+
+    if predicate == "=":
         predicate = "equals"
+
     variables = temp[1][:-1]
     predicate = predicate.replace("-", "_")
     cCode += f"state[getIndex_{predicate}("
+
     variables = variables.split(", ")
     if len(variables) > 1 or variables[0] != "":
         for var in variables:
+            # Determine actual variable representation
             if "?" in var:
                 varActual = var[1:]
             else:
@@ -19,94 +56,102 @@ def parseAtom(condition: str, objectToNum: list):
                 for i in range(len(objectToNum)):
                     if var == objectToNum[i]:
                         varActual = str(i)
+
             varActual = varActual.replace("-", "_")
             cCode += varActual + ", "
         cCode += "0)]"
     else:
         cCode += "0)]"
+
     return cCode
 
-def seperateBrackets(inputString: str, bracketType="{}"):
-    separated = list()
-    numOpen = 0
-    currentStr = ""
-    openBracket = bracketType[0]
-    closeBracket = bracketType[1]
-    for c in inputString:
-        if c == openBracket:
-            numOpen += 1
-        elif c == closeBracket:
-            numOpen -= 1
-        currentStr += c
-        if numOpen == 0:
-            separated.append(currentStr)
-            currentStr = ""
-        elif numOpen < 0:
-            raise ValueError("more closing brackets then opening in one of the conditions")
-    if numOpen > 0:
-        raise ValueError("more opening brackets then closing in one of the conditions")
-    return separated
+def __parseConjunction(condition: str):
+    """
+    Parses a conjunction condition and returns the corresponding C code representation.
+    """
+    cCode = ""
+    separatedCon = __separateBrackets(condition)
 
-def nextCondition(con, current: str, obNum: list):
+    for con in separatedCon:
+        temp = con[1:]
+        current = temp[:-1]
+        cCode += __nextCondition(con, current)
+        cCode += " && "
+
+    # Remove the last ' && '
+    cCode = cCode[:-4]
+    return cCode
+
+def __parseDisjunction(condition: str):
+    """
+    Parses a disjunction condition and returns the corresponding C code representation.
+    """
+    cCode = ""
+    separatedCon = __separateBrackets(condition)
+
+    for con in separatedCon:
+        temp = con[1:]
+        current = temp[:-1]
+        cCode += __nextCondition(con, current)
+        cCode += " || "
+    # Remove the last ' || '
+    cCode = cCode[:-4]
+    return cCode
+
+def __parseNegation(condition: str):
+    """
+    Parses a negation condition and returns the corresponding C code representation.
+    """
+    cCode = ""
+    separatedCon = __separateBrackets(condition)
+    cCode += "not ("
+
+    for con in separatedCon:
+        temp = con[1:]
+        current = temp[:-1]
+        cCode += __nextCondition(con, current)
+
+    cCode += ")"
+    return cCode
+
+def __nextCondition(con, current: str):
+    """
+    Determines the type of the next condition and processes it accordingly.
+    """
     cCode = ""
     if "[" in current:
         current = current[:-1]
         temp = current.split("[", 1)
         conType = temp[0]
+
         if con is None:
             con = temp[1]
+
         if conType == "Conjunction":
-            cCode += f"({parseConjunction(con, obNum)})"
+            cCode += f"({__parseConjunction(con)})"
         elif conType == "Disjunction":
-            cCode += f"({parseDisjunction(con, obNum)})"
+            cCode += f"({__parseDisjunction(con)})"
         elif conType == "NegatedAtom":
-            cCode += f"(({parseNegation(con, obNum)}))"
+            cCode += f"(({__parseNegation(con)}))"
         else:
             raise ValueError(f"Condition type: {conType} not supported")
     else:
-        # remove brackets
-        con = con[1:]
-        con = con[:-1]
-        cCode += parseAtom(con, obNum)
+        # Remove brackets and parse atom
+        con = con[1:][:-1]
+        cCode += __parseAtom(con)
+
     return cCode
 
-def parseConjunction(condition: str, obNum: list):
+def parseCondition(condition: str, obList: list):
+    """
+    Parses the overall condition and returns the corresponding C code representation.
+    """
     cCode = ""
-    seperatedCon = seperateBrackets(condition, "{}")
-    for con in seperatedCon:
-        temp = con[1:]
-        current = temp[:-1]
-        cCode += nextCondition(con, current, obNum)
-        cCode += " && "
-    cCode = cCode[:-4]
-    return cCode
-
-def parseDisjunction(condition: str, obNum: list):
-    cCode = ""
-    seperatedCon = seperateBrackets(condition, "{}")
-    for con in seperatedCon:
-        temp = con[1:]
-        current = temp[:-1]
-        cCode += nextCondition(con, current, obNum)
-        cCode += " || "
-    cCode = cCode[:-4]
-    return cCode
-
-def parseNegation(condition: str, obNum: list):
-    cCode = ""
-    seperatedCon = seperateBrackets(condition, "{}")
-    cCode += "not ("
-    for con in seperatedCon:
-        temp = con[1:]
-        current = temp[:-1]
-        cCode += nextCondition(con, current, obNum)
-    cCode += ")"
-    return cCode
-
-def parseCondition(condition: str, obNum: list):
-    cCode = ""
+    global objectToNum
+    objectToNum = obList
     if "[" in condition:
-        cCode += nextCondition(None, condition, obNum)
+        cCode += __nextCondition(None, condition)
     else:
-        cCode += parseAtom(condition, obNum)
+        cCode += __parseAtom(condition)
+
     return cCode

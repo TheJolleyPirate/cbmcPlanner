@@ -15,8 +15,6 @@ char state[28];
 //reserve state[0] to always be false
 int nextIndex = 1;
 //objects
-//object translation:
-//objectNames = {d, b, a, c};
 int object[] = {0, 1, 2, 3};
 //predicates
 int on[4][4];
@@ -250,19 +248,19 @@ int main(){
 		actionDecision = nondet_Int();
 		switch(actionDecision){
 		case 1:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 4){
 				pick_up(object[index0]);
 			}
 			break;
 		case 2:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 4){
 				put_down(object[index0]);
 			}
 			break;
 		case 3:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 4){
 				index1 = nondet_Int();
 				if(index1 >= 0 && index1 < 4){
@@ -271,7 +269,7 @@ int main(){
 			}
 			break;
 		case 4:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 4){
 				index1 = nondet_Int();
 				if(index1 >= 0 && index1 < 4){

@@ -15,8 +15,6 @@ char state[637];
 //reserve state[0] to always be false
 int nextIndex = 1;
 //objects
-//object translation:
-//objectNames = {p0, p1, p2, p3, f0, f1, f2, f3, f4, f5, f6, f7};
 int object[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 //predicates
 int origin[12][12];
@@ -368,7 +366,7 @@ int main(){
 		actionDecision = nondet_Int();
 		switch(actionDecision){
 		case 1:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 12){
 				index1 = nondet_Int();
 				if(index1 >= 0 && index1 < 12){
@@ -377,7 +375,7 @@ int main(){
 			}
 			break;
 		case 2:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 12){
 				index1 = nondet_Int();
 				if(index1 >= 0 && index1 < 12){
@@ -386,7 +384,7 @@ int main(){
 			}
 			break;
 		case 3:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 12){
 				index1 = nondet_Int();
 				if(index1 >= 0 && index1 < 12){
@@ -395,7 +393,7 @@ int main(){
 			}
 			break;
 		case 4:
- 			index0 = nondet_Int();
+			index0 = nondet_Int();
 			if(index0 >= 0 && index0 < 12){
 				index1 = nondet_Int();
 				if(index1 >= 0 && index1 < 12){

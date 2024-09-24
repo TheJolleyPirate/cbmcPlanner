@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+import signal
 import sys
 import timeit
 import datetime
@@ -8,13 +9,32 @@ import datetime
 from ParsePDDL import parse
 from CProgramWriter import writeProgram
 from CBMCSolver import solve
-from LogWriter import writeLogs
+from LogWriter import writeLogs, getLogFileName, combineByProblem
 from Validator import validate
+
+startTime = 0
+domain = ""
+problem = ""
+multi = False
+startingDepth = 1
+depthStep = 1
+maxDepth = 0
+manualDepth = 0
+verbose = False
+concise = False
+pTimeout = 0
+dTimeout = 300
+geoAllocation = 0
+stateSize = 1
+loadBool = False
+stopOnInvalid = False
+rewrite = False
 
 def save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems):
     el = "\n"
     lineBreak = "<><><><><><><><><>" + el
     toWrite = ""
+    
     toWrite += f"input folder: {inputFolder}{el}"
     toWrite += f"c files output folder: {cOutFolder}{el}"
     toWrite += f"log files output folder: {logOutFolder}{el}"
@@ -31,8 +51,10 @@ def save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProb
     toWrite += f"problem number: {problemNum}{el}"
     toWrite += f"number of problems: {numProblems}{el}"
     toWrite += lineBreak
+
     for prob in problemsRun:
         toWrite += prob + el
+
     with open("save.txt", "w") as saveFile:
         saveFile.write(toWrite)
 
@@ -43,7 +65,10 @@ def load():
             parts = saveFile.read().split(lineBreak)
             arguments = parts[0].splitlines()
             problems = parts[1].splitlines()
-        global startingDepth, depthStep, maxDepth, manualDepth, verbose, concise, pTimeout, dTimeout, geoAllocation, stateSize
+
+        global startingDepth, depthStep, maxDepth, manualDepth
+        global verbose, concise, pTimeout, dTimeout, geoAllocation, stateSize
+        
         inputFolder = arguments[0].split(": ")[1]
         cOutFolder = arguments[1].split(": ")[1]
         logOutFolder = arguments[2].split(": ")[1]
@@ -56,22 +81,27 @@ def load():
         pTimeout = int(arguments[9].split(": ")[1])
         dTimeout = int(arguments[10].split(": ")[1])
         geoAllocation = float(arguments[11].split(": ")[1])
+        
         percentageStateSize = int(float(arguments[12].split(": ")[1][:-1]))
         stateSize = percentageStateSize / 100
+        
         problemNum = int(arguments[13].split(": ")[1])
         numProblems = int(arguments[14].split(": ")[1])
+        
         return problems, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems
+    
     except FileNotFoundError as err:
         print("save file not found", file=sys.stderr)
         raise err
 
-def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, domainFile, positionInfo = None):
-    #first step write the c program
+def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, domainFile, positionInfo=None):
     if positionInfo is None:
         print("writing c program")
     else:
         print(f"writing c program {positionInfo[0]}/{positionInfo[1]}")
+    
     cFile, realStateSize, objectToNum, problemName = writeProgram(parsedProblem, cOutFolder, stateSize)
+    
     oldActionNames = list()
     newActionNames = list()
     for act in parsedProblem.actions:
@@ -79,43 +109,53 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
         newName = oldName.replace("-", "_")
         oldActionNames.append(oldName)
         newActionNames.append(newName)
-    #second step solve the c program
+
     cName = str(cFile).split("/")[-1]
+    
     if concise:
         print(f"solving {problemName} with CBMC")
     else:
         print(f"solving {problemName} with CBMC:")
-    results = solve(cFile, maxDepth, manualDepth, startingDepth, depthStep, oldActionNames, newActionNames,
-                    objectToNum, concise, verbose, pTimeout, dTimeout, geoAllocation)
-    #third step validate the solution
+    
+    results = solve(cFile, maxDepth, manualDepth, startingDepth, depthStep, 
+                    oldActionNames, newActionNames, objectToNum, concise, 
+                    verbose, pTimeout, dTimeout, geoAllocation)
+
     stopExecution = False
-    if bool(results[0]):
+    
+    if results[0]:
         print(f"validating plan to solve {cName}:")
         valid = validate(results[0], domainFile, problemFile, verbose)
+        
         if valid:
             print("\tplan valid")
         else:
             print("\tplan invalid")
     else:
         valid = False
+    
     if stopOnInvalid and not valid:
         stopExecution = True
-    #fourth step write the logs
-    problemLogs = writeLogs(problemName, logOutFolder, results, valid, stateSize, realStateSize, pTimeout, dTimeout, maxDepth, geoAllocation)
+
+    problemLogs = writeLogs(problemName, logOutFolder, results, valid, 
+                             stateSize, realStateSize, pTimeout, 
+                             dTimeout, maxDepth, geoAllocation)
+    
     return problemLogs, stopExecution
 
-def sorted_nicely( l ):
+def sorted_nicely(l):
+    """ Sort the given iterable in a human-friendly way. """
     """function by Mark Byers
     sourced from https://stackoverflow.com/questions/2669059/how-to-sort-alpha-numeric-set-in-python"""
     """ Sort the given iterable in the way that humans expect."""
     convert = lambda text: int(text) if text.isdigit() else text
-    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
-    return sorted(l, key = alphanum_key)
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+    return sorted(l, key=alphanum_key)
 
 def run():
     logs = list()
-    allowedRequirements = [":strips", ":typing", ":equality", ":disjunctive-preconditions", ":negation",
-                           ":negative-preconditions"]
+    allowedRequirements = [":strips", ":typing", ":equality", ":disjunctive-preconditions", 
+                           ":negation", ":negative-preconditions"]
     # TODO, ":conditional-effects", ":universal-preconditions", ":quantified-preconditions",
     #  ":existential-preconditions", ":adl", ":derived-predicates", ":action-costs",":fluents", ":numeric-fluents",
     #  ":domain-axioms", ":safety-constraints", ":ucpop"]
@@ -135,6 +175,7 @@ def run():
     if multi:
         problemNum = None
         numProblems = None
+        
         if loadBool:
             problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems = load()
         else:
@@ -146,81 +187,127 @@ def run():
             else:
                 cOutFolder = f"{inputFolder}/output/cFiles"
                 logOutFolder = f"{inputFolder}/output/logs"
+        
         files = os.listdir(inputFolder)
         pddlFiles = list()
         domainProblems = dict()
         domains = dict()
         problemFiles = list()
         files = sorted_nicely(files)
+        
         for file in files:
             if file.endswith(".pddl"):
                 current = f"{inputFolder}/{file}"
                 pddlFiles.append(current)
+                
                 with open(current, "r") as f:
                     contents = f.read()
+                
                 if "(define (domain " in contents:
                     temp = contents.split("(define (domain ")[1]
-                    name = temp.split(")")[0]
+                    name = temp.split(")", 1)[0]
                     domains[name] = current
                     domainProblems[name] = list()
                 else:
                     problemFiles.append(file)
+
         for pFile in problemFiles:
             current = f"{inputFolder}/{pFile}"
+            
             with open(current, "r") as f:
                 contents = f.read()
+            toIgnore = False
+            if not rewrite:
+                temp = contents.split("(define (problem ")[1]
+                name = temp.split(")", 1)[0]
+                possibleLogFiles = getLogFileName(logOutFolder,stateSize, maxDepth, pTimeout, dTimeout, geoAllocation, name)
+                for p in possibleLogFiles:
+                    if os.path.isfile(p):
+                        toIgnore = True
+                        break
+            
             temp = contents.split("(:domain ")[1]
             currentDomain = temp.split(")")[0]
-            if currentDomain in domains:
+            
+            if currentDomain in domains and not toIgnore:
                 domainProblems[currentDomain].append(current)
+
         if not loadBool:
             numProblems = len(problemFiles)
             problemNum = 1
+
         for dom in domains:
             problems = domainProblems[dom]
             for prob in problems:
                 if prob in problemsRun:
                     continue
+                
                 parsedProblem = parse(domains[dom], prob)
+                
                 for requirement in parsedProblem.requirements.requirements:
                     if requirement not in allowedRequirements:
                         raise ValueError(
-                            f"Sorry the allowed requirements are currently limited and {requirement} is not allowed")
-                log, stopExecution = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, prob, domains[dom], (problemNum, numProblems))
+                            f"Sorry the allowed requirements are currently limited and {requirement} is not allowed"
+                        )
+                
+                log, stopExecution = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, 
+                                                          prob, domains[dom], (problemNum, numProblems))
                 problemNum += 1
                 problemsRun.append(prob)
                 save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems)
                 logs.append(log)
+                
                 if stopExecution:
                     break
     else:
         print(f"Combining Domain: {domain} with problem: {problem}")
         parsedProblem = parse(domain, problem)
         rootFolder = problem.rsplit("/", 1)[0]
+        
         for requirement in parsedProblem.requirements.requirements:
             if requirement not in allowedRequirements:
                 raise ValueError(
-                    f"Sorry the allowed requirements are currently limited and {requirement} is not allowed")
+                    f"Sorry the allowed requirements are currently limited and {requirement} is not allowed"
+                )
+        
         cOutFolder = f"{rootFolder}/output/cFiles"
         logOutFolder = f"{rootFolder}/output/logs"
+        
         log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problem, domain)
         logs.append(log)
+
+    combineByProblem(logOutFolder)
     if not concise:
         first = True
         print("\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/")
+        
         for log in logs:
             if not first:
                 print("")
             else:
                 first = False
+            
             if verbose:
                 print(log[0])
             else:
                 print(log[1])
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='cbmcPlan',
-                                     description='Converts PDDL files into a C program and solves it using CBMC')
+def inturruptHandler(signalType, frame):
+    global startTime
+    intTime = timeit.default_timer()
+    elapsedTime = intTime - startTime
+    formattedTime = datetime.timedelta(seconds=elapsedTime)
+    formattedTime = str(formattedTime).split(".")[0]
+    print(f"\nProgram interrupted after (H:MM:SS): {formattedTime}")
+    if signal.Signals(signalType).name != signal.SIGINT.name:
+        print(f"{signalType}{frame}")
+    sys.exit(0)
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog='cbmcPlan',
+        description='Converts PDDL files into a C program and solves it using CBMC'
+    )
     parser.add_argument('-d', '--domain', type=str, default=False,
                         help='Specifies the domain PDDL file, if required')
     parser.add_argument('-p', '--problem', type=str, default=False,
@@ -253,9 +340,15 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--load', action='store_true', default=False,
                         help='Continue execution from where it was interrupted')
     parser.add_argument('-si', '--stopOnInvalid', action='store_true', default=False,
-                        help='stops the program execution on the first invalid solution found, instead of continuing')
+                        help='Stops the program execution on the first invalid problem, instead of continuing')
+    parser.add_argument('-r', '--rewrite', action='store_true', default=False,
+                        help='run problems with logs allready written and rewrite them')
+
     args = parser.parse_args()
-    #XOR check
+    global domain, problem, multi, startingDepth, depthStep, maxDepth, manualDepth, verbose, concise
+    global pTimeout, dTimeout, geoAllocation, stateSize, loadBool, stopOnInvalid, startTime, rewrite
+
+    # XOR check
     if bool(args.domain) != bool(args.problem):
         parser.error('--domain and --problem must be given together')
     elif bool(args.domain) and bool(args.problem) and not bool(args.folder):
@@ -269,10 +362,12 @@ if __name__ == "__main__":
             inFolder = args.folder
         else:
             inFolder = "input"
+
         os.makedirs(inFolder, exist_ok=True)
         multi = True
         domain = inFolder
         problem = domain
+
     if bool(args.geometricAllocation) and (not bool(args.maxDepth) or not bool(args.problemTimeout)):
         parser.error('if using --geometricAllocation, must set a --maxDepth and a --problemTimeout')
 
@@ -288,16 +383,25 @@ if __name__ == "__main__":
     stateSize = args.stateSize
     loadBool = args.load
     stopOnInvalid = args.stopOnInvalid
+    rewrite = args.rewrite
 
     startTime = timeit.default_timer()
+    signal.signal(signal.SIGINT, inturruptHandler)
+
     run()
+
     endTime = timeit.default_timer()
-    time = endTime - startTime
-    time = datetime.timedelta(seconds=time)
-    time = str(time).split(".")[0]
+    elapsedTime = endTime - startTime
+    formattedTime = datetime.timedelta(seconds=elapsedTime)
+    formattedTime = str(formattedTime).split(".")[0]
+
     print("/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\")
-    print("overall run time(H:MM:SS): " + str(time))
+    print("overall run time (H:MM:SS): " + str(formattedTime))
+    print("------------------------")
     # TODO: madagascar: test problems in another planning tool to get plan lengths
     # TODO: Implement Regression Testing
     # TODO: test each problem with different depths, timeouts, and state sizes then make graph
     # TODO: write report
+
+if __name__ == "__main__":
+    main()

@@ -5,29 +5,36 @@ import subprocess
 import timeit
 import math
 from time import sleep
-
 from LogWriter import writeLogs
 
+# Global variable to track if problem timeout has occurred
 pTimeBool = False
 
 def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, lastStepTime, gAllocation):
-    fileName = cFile.split("/")[-1]
+    """
+    Solves an individual problem instance with the given depth and parameters.
+    Returns the results of the solver execution.
+    """
+    fileName = os.path.basename(cFile)
     toProcess = False
     timeoutBool = False
     stateBool = False
+
+    # Print the running status based on verbosity and conciseness
     if verbose:
         if not lastStepTime:
             print(f"\trunning {fileName} with depth {depth}")
         else:
-            temp = "{:0.2f}".format(lastStepTime)
-            print(f"\trunning {fileName} with depth {depth}, previous depth time: {temp} seconds")
+            print(f"\trunning {fileName} with depth {depth}, previous depth time: {lastStepTime:.2f} seconds")
     elif not concise:
         if not lastStepTime:
             print(f"\r\trunning {fileName} with depth {depth}", end='')
         else:
-            temp = "{:0.2f}".format(lastStepTime)
-            print(f"\r\trunning {fileName} with depth {depth}, previous depth time: {temp} seconds", end='')
+            print(f"\r\trunning {fileName} with depth {depth}, previous depth time: {lastStepTime:.2f} seconds", end='')
+
+    # Update command list with current depth
     cmdList[-1] = str(depth)
+
     try:
         start = timeit.default_timer()
         if bool(timeout):
@@ -38,40 +45,51 @@ def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, last
         time = stop - start
         results = cmd.stdout
         err = cmd.stderr
-        if err != "":
+        if err:
             raise subprocess.SubprocessError(err)
+
+        # Check for violated properties in the results
         goalChecker = results.split("Violated property:")
-        #might have multiple violated properties
-        #when solver has to internally change depth, it throws a violated property
-        #should ignore these
         if "GOAL CHECKER: FAIL MEANS PLAN FOUND" in goalChecker[-1]:
             if not concise:
-                temp = "{:0.2f}".format(time)
-                print(f"\ntime: {temp} seconds")
+                print(f"\ntime: {time:.2f} seconds")
             if verbose:
                 print(results)
             if len(goalChecker) > 1:
                 toProcess = goalChecker[-2]
             else:
                 stateBool = True
+
     except subprocess.TimeoutExpired:
+        # Handle timeout scenario
         if gAllocation <= 1:
             print("")
             timeoutBool = True
         time = timeout
+
     return toProcess, time, timeoutBool, stateBool
 
 def problemTimeout(pTimeout):
+    """
+    Sets a timeout for the problem execution.
+    """
     sleep(pTimeout)
     global pTimeBool
     pTimeBool = True
 
 def currentTimeout(currentDepth, maxDepth, pTimeout, commonFactor):
+    """
+    Calculates the timeout for the current depth based on a geometric series.
+    """
     geometricSeries = (commonFactor ** maxDepth) / (commonFactor - 1)
     timeout = pTimeout * (commonFactor ** (currentDepth - 1)) / geometricSeries
     return timeout
 
 def solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dtimeout, cFile, cmdList, concise, verbose):
+    """
+    Main loop to attempt solving the problem at increasing depths.
+    Returns the results of the solving attempts.
+    """
     depth = startDepth - depthStep
     relativeMaxDepth = math.ceil((maxDepth - startDepth + 1) / depthStep)
     relativeCurrentDepth = 1
@@ -80,53 +98,75 @@ def solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dtimeout, 
     currentTime = 0
     history = list()
     d = dtimeout
+
     while True:
-        if bool(maxDepth):
-            if depth >= maxDepth:
-                break
+        if maxDepth and depth >= maxDepth:
+            break
         depth += depthStep
+
+        # Update depth timeout based on geometric allocation if applicable
         if gAllocation > 1:
             d = currentTimeout(relativeCurrentDepth, relativeMaxDepth, pTimeout, gAllocation)
             relativeCurrentDepth += 1
+
+        # Solve the individual problem at the current depth
         results = individualSolver(cFile, cmdList, depth, d, concise, verbose, currentTime, gAllocation)
         currentTime = results[1]
         planFound = bool(results[0])
         stateBool = results[3]
         if gAllocation <= 1:
             timeoutBool = results[2]
+
+        # Check for conditions to break the loop
         if planFound or timeoutBool or pTimeBool or stateBool:
             toProcess = results[0]
             timeoutBool = results[2]
             break
-        else:
-            temp = (currentTime, depth)
-            history.append(temp)
+
+        history.append((currentTime, depth))
+
     return toProcess, currentTime, timeoutBool, depth, history, d
 
 def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, newActionNames, objectToNum, concise,
           verbose, pTimeout, dTimeout, gAllocation):
+    """
+    Main function to handle the solving process of the given problem file.
+    Returns the plan information and other relevant results.
+    """
     cbmcPath = os.path.abspath("externalTools/ubuntu-22-cbmc-6.1.1/cbmc")
     cmdList = [cbmcPath, cFile, "--compact-trace", "--unwind", ""]
-    if not bool(manualDepth):
+
+    if not manualDepth:
         global pTimeBool
         pTimeBool = False
+
         if pTimeout:
+            # Start a separate process to handle problem timeout
             probTimer = multiprocessing.Process(target=problemTimeout, args=[pTimeout])
             probTimer.start()
+
+            # Execute the solving loop
             results = solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dTimeout, cFile, cmdList,
                                 concise, verbose)
+
             probTimer.terminate()
             probTimer.join()
+
         else:
+            # Execute the solving loop without timeout
             results = solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dTimeout, cFile, cmdList,
                                 concise, verbose)
+
+        # Extract results from the solving attempt
         toProcess = results[0]
         finalTime = results[1]
         timeoutBool = results[2]
         depth = results[3]
         history = results[4]
         timeout = results[5]
+
     else:
+        # Handle the case of manual depth solving
         depth = manualDepth
         results = individualSolver(cFile, cmdList, depth, dTimeout, concise, verbose, False, 0)
         toProcess = results[0]
@@ -134,49 +174,51 @@ def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, n
         timeoutBool = results[2]
         timeout = results[5]
         history = None
-    if bool(toProcess) and not timeoutBool:
+
+    # Process the result if a plan was found and no timeout occurred
+    if toProcess and not timeoutBool:
         lines = toProcess.splitlines()
         planList = list()
-        #ran into error where action names containing shorter action names are ignored
-        #e.g. unstack being read as stack
-        #to fix this could sort newActionNames, but that is imprecise and introduces vulnerabilities
-        #will collect names which match, and then pick the longest
+
+        # Collect action names while ensuring unique matching
         for line in lines:
             matches = list()
             for i in range(len(oldActionNames)):
                 actionWithBracket = newActionNames[i] + "("
                 if actionWithBracket in line:
+                    # Collect matching action names
                     matches.append(oldActionNames[i])
-            if bool(matches):
-                actionName = ""
-                for match in matches:
-                    if len(match) > len(actionName):
-                        actionName = match
-                temp = line + "\n"
-                temp = temp.split(" ", 2)[2]
-                temp = temp[:-1]
-                temp = temp.split("(")[1]
-                temp = temp[:-1]
-                variableNums = temp.split(", ")
-                action = actionName
+
+            if matches:
+                # Find the longest matching action name
+                action = max(matches, key=len)
+                temp = line.split(" ", 2)[2]
+                variableNums = temp.split("(")[1][:-1]
+                variableNums = variableNums.split(", ")
+
+                # Construct the action string with variable names
                 for varNum in variableNums:
                     var = objectToNum[int(varNum)]
                     action += " " + var
                 planList.append(action)
         print(f"found plan: {planList}")
         planInfo = planList
+
     else:
+        # Handle the cases where no plan was found or timeout occurred
         if timeoutBool:
             print(f"timeout: {timeout} seconds")
         else:
-            print(f"no plan found with max depth: {maxDepth}")
-        planInfo = False
+            print(f"\nno plan found with time {timeout} seconds")
+        planInfo = False  # Set plan info to False
+
     return planInfo, depth, finalTime, timeoutBool, history
 
 if __name__ == "__main__":
+    # Set up command line argument parsing
     parser = argparse.ArgumentParser(prog='cbmcSolve',
                                      description='solves a CBMC planning problem generated by CProgramWriter')
-    parser.add_argument("cFile",type=str, help='the c File for CBMC to solve')
+    parser.add_argument("cFile", type=str, help='the c file for CBMC to solve')
     parser.add_argument('-sd', '--startingDepth', type=int, default=1,
                         help='the starting depth of the solver, default 1')
     parser.add_argument('-ds', '--depthStep', type=int, default=1,
@@ -188,7 +230,7 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--verbose', action='store_true', default=False,
                         help='makes the command line output verbose')
     parser.add_argument('-c', '--concise', action='store_true', default=False,
-                        help='makes the command line output verbose')
+                        help='makes the command line output concise')
     parser.add_argument('-pt', '--problemTimeout', type=int, default=False,
                         help='gives a timeout for running each PDDL problem')
     parser.add_argument('-dt', '--depthTimeout', type=int, default=300,
@@ -197,54 +239,67 @@ if __name__ == "__main__":
     parser.add_argument('-ga', '--geometricAllocation', type=float, default=0,
                         help='controls the geometric allocation; >=1 turns it off, otherwise sets common factor for '
                              'geometric series. E.g. 2 means the max depth will have 1/2 the total time and 3 means the'
-                             ' max depth will have 2/3 the total time converesly 1.5 means the max depth will have 1/3 '
+                             ' max depth will have 2/3 the total time conversely 1.5 means the max depth will have 1/3 '
                              'of the total time and 1.25 means the max depth has 1/4 the total time. Overrides depth '
                              'timeout')
+
+    # Parse arguments
     args = parser.parse_args()
     cf = args.cFile
     md = args.maxDepth
     sd = args.startingDepth
     ds = args.depthStep
-    m = args.manual
+    m = args.manualDepth
     c = args.concise
     v = args.verbose
     pt = args.problemTimeout
     dt = args.depthTimeout
     ga = args.geometricAllocation
-    contents = open(cf, 'r').read()
+
+    # Read the contents of the C file
+    with open(cf, 'r') as file:
+        contents = file.read()
+
     clines = contents.splitlines()
     otn = None
     stateSize = None
     breakCheck = [False, False]
+
+    # Extract object names and state size from the C file
     for cline in clines:
         if "//objectNames = {" in cline:
-            names = cline.split("//objectNames = {")[1]
-            names = names[:-2]
+            names = cline.strip("//objectNames = {")[:-2]
             otn = names.split(", ")
             breakCheck[0] = True
         if "int n = " in cline:
-            stateSize = cline.split("int n = ")[1]
-            stateSize = stateSize[:-1]
-            stateSize = int(stateSize)
+            stateSize = int(cline.strip("int n = ")[:-1])
             breakCheck[1] = True
         if breakCheck[0] and breakCheck[1]:
             break
 
+    # Raise error if object names or state size not found
     if otn is None:
         raise ValueError("could not find variable names in c file")
     if stateSize is None:
         raise ValueError("could not find state size in c file")
+
+    # Extract preamble information
     preamble = contents.split("//END OF PREAMBLE")[0]
-    clines = preamble.splitlines()
-    clines = clines[2:]
+    # Skip the first two lines (comments)
+    clines = preamble.splitlines()[2:]
     oan = list()
     nan = list()
+
+    # Collect action names from the preamble
     for cline in clines:
-        comparistion = cline[2:]
-        actions = comparistion.split("==")
+        actions = cline[2:].split("==")
         nan.append(actions[0])
         oan.append(actions[1])
+
+    # Solve the problem using the extracted information
     r = solve(cf, md, m, sd, ds, oan, nan, otn, c, v, pt, dt, ga)
+
+    # Prepare logging information
     loc = cf.rsplit("/", 1)
     rootFolder = loc[0]
     logOutFolder = rootFolder
@@ -254,7 +309,10 @@ if __name__ == "__main__":
     else:
         valid = None
     # TODO: get problem state size from c file
-    logs = writeLogs(name, logOutFolder, r, valid, "unkown", stateSize, pt, dt, md)
+    # Write logs based on solving results
+    logs = writeLogs(name, logOutFolder, r, valid, "unknown", stateSize, pt, dt, md, ga)
+
+    # Print logs based on verbosity
     if v:
         print(logs[0])
     else:

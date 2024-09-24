@@ -1,0 +1,19 @@
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.46 seconds
+history:
+	0: depth 1 in 0.11 seconds
+	1: depth 2 in 0.09 seconds
+	2: depth 3 in 0.08 seconds
+	3: depth 4 in 0.08 seconds
+	4: depth 5 in 3.67 seconds
+	5: depth 6 in 6.38 seconds
+	6: depth 7 in 9.85 seconds
+	7: depth 8 in 14.11 seconds
+	8: depth 9 in 20.67 seconds
+	9: depth 10 in 30.46 seconds

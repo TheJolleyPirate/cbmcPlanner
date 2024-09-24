@@ -1,0 +1,158 @@
+input/for-graphs/output/logs/state10%-md10/invalid/noPlanFound/blocks-4-2.log
+blocks-4-2 FAILED
+	reason failed: no plan found
+problem details:
+	state size: 4
+	maximum depth: 10
+with
+	depth: 5
+	time: 0.11 seconds
+history:
+	0: depth 1 in 0.09 seconds
+	1: depth 2 in 0.09 seconds
+	2: depth 3 in 0.07 seconds
+	3: depth 4 in 0.08 seconds
+input/for-graphs/output/logs/state20%-md10/invalid/noPlanFound/blocks-4-2.log
+blocks-4-2 FAILED
+	reason failed: no plan found
+problem details:
+	state size: 9
+	maximum depth: 20
+with
+	depth: 5
+	time: 0.10 seconds
+history:
+	0: depth 1 in 0.07 seconds
+	1: depth 2 in 0.08 seconds
+	2: depth 3 in 0.09 seconds
+	3: depth 4 in 0.09 seconds
+input/for-graphs/output/logs/state30%-md10/invalid/noPlanFound/blocks-4-2.log
+blocks-4-2 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 14.39 seconds
+history:
+	0: depth 1 in 0.09 seconds
+	1: depth 2 in 0.09 seconds
+	2: depth 3 in 0.08 seconds
+	3: depth 4 in 0.07 seconds
+	4: depth 5 in 3.19 seconds
+	5: depth 6 in 4.92 seconds
+	6: depth 7 in 6.85 seconds
+	7: depth 8 in 9.18 seconds
+	8: depth 9 in 11.79 seconds
+	9: depth 10 in 14.39 seconds
+input/for-graphs/output/logs/state40%-md10/invalid/noPlanFound/blocks-4-2.log
+blocks-4-2 FAILED
+	reason failed: depth out
+problem details:
+	state size: 18
+	maximum depth: 10
+with
+	depth: 10
+	time: 1593.55 seconds
+history:
+	0: depth 1 in 0.11 seconds
+	1: depth 2 in 0.11 seconds
+	2: depth 3 in 0.08 seconds
+	3: depth 4 in 0.09 seconds
+	4: depth 5 in 4.89 seconds
+	5: depth 6 in 15.23 seconds
+	6: depth 7 in 47.55 seconds
+	7: depth 8 in 168.30 seconds
+	8: depth 9 in 438.04 seconds
+	9: depth 10 in 1593.55 seconds
+input/for-graphs/output/logs/state50%-md10/valid/blocks-4-2.log
+blocks-4-2 SOLVED!
+problem details:
+	state size: 22
+	maximum depth: 10
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 15.52 seconds
+history:
+	0: depth 1 in 0.11 seconds
+	1: depth 2 in 0.09 seconds
+	2: depth 3 in 0.09 seconds
+	3: depth 4 in 0.08 seconds
+	4: depth 5 in 4.90 seconds
+input/for-graphs/output/logs/state60%-md10/valid/blocks-4-2.log
+blocks-4-2 SOLVED!
+problem details:
+	state size: 27
+	maximum depth: 20
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 14.37 seconds
+history:
+	0: depth 1 in 0.11 seconds
+	1: depth 2 in 0.10 seconds
+	2: depth 3 in 0.10 seconds
+	3: depth 4 in 0.10 seconds
+	4: depth 5 in 4.73 seconds
+input/for-graphs/output/logs/state70%-md10/valid/blocks-4-2.log
+blocks-4-2 SOLVED!
+problem details:
+	state size: 31
+	maximum depth: 10
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 14.23 seconds
+history:
+	0: depth 1 in 0.10 seconds
+	1: depth 2 in 0.08 seconds
+	2: depth 3 in 0.08 seconds
+	3: depth 4 in 0.09 seconds
+	4: depth 5 in 5.14 seconds
+input/for-graphs/output/logs/state80%-md10/valid/blocks-4-2.log
+blocks-4-2 SOLVED!
+problem details:
+	state size: 36
+	maximum depth: 20
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 14.09 seconds
+history:
+	0: depth 1 in 0.10 seconds
+	1: depth 2 in 0.08 seconds
+	2: depth 3 in 0.09 seconds
+	3: depth 4 in 0.09 seconds
+	4: depth 5 in 5.19 seconds
+input/for-graphs/output/logs/state90%-md10/valid/blocks-4-2.log
+blocks-4-2 SOLVED!
+problem details:
+	state size: 40
+	maximum depth: 10
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 15.50 seconds
+history:
+	0: depth 1 in 0.10 seconds
+	1: depth 2 in 0.10 seconds
+	2: depth 3 in 0.09 seconds
+	3: depth 4 in 0.10 seconds
+	4: depth 5 in 4.87 seconds
+input/for-graphs/output/logs/state100%-md10/valid/blocks-4-2.log
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 20
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.52 seconds
+history:
+	0: depth 1 in 0.09 seconds
+	1: depth 2 in 0.09 seconds
+	2: depth 3 in 0.07 seconds
+	3: depth 4 in 0.08 seconds
+	4: depth 5 in 5.29 seconds

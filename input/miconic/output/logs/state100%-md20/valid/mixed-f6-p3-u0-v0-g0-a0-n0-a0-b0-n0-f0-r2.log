@@ -1,0 +1,18 @@
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 369
+	maximum depth: 20
+with:
+	plan: 0: (up f0 f4) 1: (board f4 p1) 2: (down f4 f3) 3: (board f3 p2) 4: (down f3 f1) 5: (board f1 p0) 6: (down f1 f0) 7: (depart f0 p1) 8: (depart f0 p0) 9: (depart f0 p2) 
+	depth: 10
+	time: 876.52 seconds
+history:
+	0: depth 1 in 0.11 seconds
+	1: depth 2 in 0.10 seconds
+	2: depth 3 in 0.10 seconds
+	3: depth 4 in 0.11 seconds
+	4: depth 5 in 0.11 seconds
+	5: depth 6 in 0.10 seconds
+	6: depth 7 in 0.10 seconds
+	7: depth 8 in 0.12 seconds
+	8: depth 9 in 0.12 seconds

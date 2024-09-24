@@ -3,17 +3,33 @@ c files output folder: input/for-graphs/output/cFiles
 log files output folder: input/for-graphs/output/logs
 starting depth: 1
 depth step: 1
-max depth: 0
+max depth: 10
 manual depth: 0
 verbose: False
 concise: False
 p timeout: 0
-d timeout: 300
+d timeout: 0
 geo allocation: 0
-state size: 20.0%
-problem number: 4
-number of problems: 13
+state size: 30.0%
+problem number: 20
+number of problems: 19
 <><><><><><><><><>
 input/for-graphs/probBLOCKS-4-0.pddl
 input/for-graphs/probBLOCKS-4-1.pddl
 input/for-graphs/probBLOCKS-4-2.pddl
+input/for-graphs/probBLOCKS-5-1.pddl
+input/for-graphs/s1-0.pddl
+input/for-graphs/s1-1.pddl
+input/for-graphs/s1-2.pddl
+input/for-graphs/s1-3.pddl
+input/for-graphs/s1-4.pddl
+input/for-graphs/s2-0.pddl
+input/for-graphs/s2-1.pddl
+input/for-graphs/s2-2.pddl
+input/for-graphs/s2-3.pddl
+input/for-graphs/s2-4.pddl
+input/for-graphs/s3-0.pddl
+input/for-graphs/s3-1.pddl
+input/for-graphs/s3-2.pddl
+input/for-graphs/s3-3.pddl
+input/for-graphs/s3-4.pddl
