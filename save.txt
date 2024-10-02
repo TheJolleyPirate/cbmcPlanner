@@ -1,35 +1,18 @@
-input folder: input/for-graphs
-c files output folder: input/for-graphs/output/cFiles
-log files output folder: input/for-graphs/output/logs
+input folder: input/stockhold/zExampleProblems
+c files output folder: input/stockhold/zExampleProblems/output/cFiles
+log files output folder: input/stockhold/zExampleProblems/output/logs
 starting depth: 1
 depth step: 1
-max depth: 10
+max depth: 0
 manual depth: 0
 verbose: False
 concise: False
 p timeout: 0
-d timeout: 0
+d timeout: 300
 geo allocation: 0
-state size: 30.0%
-problem number: 20
-number of problems: 19
+state size: 100%
+problem number: 3
+number of problems: 2
 <><><><><><><><><>
-input/for-graphs/probBLOCKS-4-0.pddl
-input/for-graphs/probBLOCKS-4-1.pddl
-input/for-graphs/probBLOCKS-4-2.pddl
-input/for-graphs/probBLOCKS-5-1.pddl
-input/for-graphs/s1-0.pddl
-input/for-graphs/s1-1.pddl
-input/for-graphs/s1-2.pddl
-input/for-graphs/s1-3.pddl
-input/for-graphs/s1-4.pddl
-input/for-graphs/s2-0.pddl
-input/for-graphs/s2-1.pddl
-input/for-graphs/s2-2.pddl
-input/for-graphs/s2-3.pddl
-input/for-graphs/s2-4.pddl
-input/for-graphs/s3-0.pddl
-input/for-graphs/s3-1.pddl
-input/for-graphs/s3-2.pddl
-input/for-graphs/s3-3.pddl
-input/for-graphs/s3-4.pddl
+input/stockhold/zExampleProblems/exampleProblem2.pddl
+input/stockhold/zExampleProblems/exampleProblem.pddl

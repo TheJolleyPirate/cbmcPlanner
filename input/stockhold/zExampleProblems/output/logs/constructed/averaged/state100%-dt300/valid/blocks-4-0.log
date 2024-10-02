@@ -1,0 +1,15 @@
+blocks-4-0 SOLVED!
+problem details:
+	state size: 45
+	depth timeout: 300
+with:
+	plan: 0: (pick-up b) 1: (stack b a) 2: (pick-up c) 3: (stack c b) 4: (pick-up d) 5: (stack d c) 
+	depth: 6
+	time: 17.27 seconds
+history:
+	1: depth 1 in 0.07 seconds
+	2: depth 2 in 0.06 seconds
+	3: depth 3 in 0.07 seconds
+	4: depth 4 in 0.08 seconds
+	5: depth 5 in 5.18 seconds
+	6: depth 6 in 17.27 seconds

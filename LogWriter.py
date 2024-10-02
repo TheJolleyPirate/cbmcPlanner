@@ -1,8 +1,10 @@
 import collections
 import os
 import re
+import statistics
 import sys
 from pathlib import Path
+
 
 def getLogFileName(logOutFolder, problemStateSize, maximumDepth, pTimeout, dTimeout, gAllocation, problem, plan = False, timeoutBool = False, valid = "indet"):
     stateSizePercentage = "{:.0%}".format(problemStateSize)
@@ -45,7 +47,7 @@ def getLogFileName(logOutFolder, problemStateSize, maximumDepth, pTimeout, dTime
         fileName = f"{logOutFolder}/{problem}.log"
         return fileName
 
-def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realStateSize, pTimeout, dTimeout, maximumDepth, gAllocation):
+def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realStateSize, pTimeout, dTimeout, maximumDepth, gAllocation, overwrite = False):
     """
     Writes logs for the problem-solving results to a specified output folder.
     """
@@ -111,27 +113,36 @@ def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realState
 
     # Log depth and execution time
     fileLogs += f"\tdepth: {depth}\n"
-    formattedTime = f"{finalTime:.2f}"
     if finalTime is not None:
+        formattedTime = f"{finalTime:.2f}"
         fileLogs += f"\ttime: {formattedTime} seconds\n"
     else:
         fileLogs += "\ttime: n/a\n"
+        formattedTime = "n/a"
 
     # Log history of execution times
     if history is not None:
         fileLogs += "history:\n"
+        afterLoop = 1
         for i in range(len(history)):
             current = history[i]
             runTime = "{:0.2f}".format(current[0])
             runDepth = current[1]
-            fileLogs += f"\t{i}: depth {runDepth} in {runTime} seconds\n"
+            fileLogs += f"\t{i + 1}: depth {runDepth} in {runTime} seconds\n"
+            afterLoop = i + 2
+        fileLogs += f"\t{afterLoop}: depth {depth} in {formattedTime} seconds\n"
 
     # Prepare output folder based on problem state size and other parameters
     fileName = getLogFileName(logOutFolder, problemStateSize, maximumDepth, pTimeout, dTimeout, gAllocation, problem, plan, timeoutBool, valid)
-
-    # Write the logs to the file
-    with open(fileName, "w") as logFile:
-        logFile.write(fileLogs)
+    if overwrite:
+        with open(fileName, "w") as logFile:
+            logFile.write(fileLogs)
+    else:
+        if os.path.isfile(fileName):
+            fileLogs = f"breakbreakbreak\n{fileLogs}"
+        # Write the logs to the file
+        with open(fileName, "a") as logFile:
+            logFile.write(fileLogs)
 
     # Prepare print logs for console output
     if plan:
@@ -139,7 +150,7 @@ def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realState
     else:
         printLogs = f"No plan found for {problem} with depth {depth} and time {formattedTime} seconds"
 
-    return fileLogs, printLogs
+    return fileLogs, printLogs, fileName
 
 def sorted_nicely(l):
     """ Sort the given iterable in a human-friendly way. """
@@ -151,21 +162,122 @@ def sorted_nicely(l):
     return sorted(l, key=alphanum_key)
 
 
-def combineByProblem(root):
+def corrolate(root):
     files = list()
     for p, s, f in os.walk(root):
         for file in f:
             toAdd = os.path.join(p, file)
-            if "output/logs/combined" not in toAdd:
+            if "output/logs/constructed" not in toAdd:
                 files.append(toAdd)
-    problemFiles = dict()
+
+    averageFiles = list()
+    constructedFolder = f"{root}/constructed"
+    Path(constructedFolder).mkdir(parents=True, exist_ok=True)
     for file in files:
+        if not file.endswith(".log"):
+            continue
+        with open(file, 'r') as multiLog:
+            runs = multiLog.read()
+        runs = runs.split("breakbreakbreak")
+        pathPart = file.split("/")
+        percentageStateSize = 0
+        for i in range(len(pathPart)):
+            if "state" in pathPart[i] and ("valid" in pathPart[i+1] or "invalid" in pathPart[i+1]):
+                percentageStateSize = pathPart[i].split("state")[1]
+                percentageStateSize = percentageStateSize.split("%")[0]
+                percentageStateSize = int(percentageStateSize) / 100
+                break
+        stateSize = False
+        maxDepth = False
+        planBool = False
+        depth = False
+        problemName = False
+        valid = False
+        pTimeout = False
+        dTimeout = False
+        timeoutBool = False
+        gAllocation = 0
+        endTimes = list()
+        planList = list()
+        historyDict = dict()
+        for run in runs:
+            run = run.split("history:")
+            if len(run) < 2:
+                continue
+            preamble = run[0].splitlines()
+            history = run[1].splitlines()
+            finalTime = False
+            for line in preamble:
+                if "state size: " in line and not stateSize:
+                    stateSize = int(line.split("state size: ")[1])
+                if "maximum depth: " in line and not maxDepth:
+                    maxDepth = int(line.split("maximum depth: ")[1])
+                if "plan: " in line and not planBool:
+                    planBool = True
+                    plan = line.split("plan: ")[1]
+                    actions = plan.split("(")[1:]
+                    for act in actions:
+                        action = act.split(")")[0]
+                        planList.append(action)
+                if "depth: " in line and "maximum depth: " not in line and not depth:
+                    depth = int(line.split("depth: ")[1])
+                if "SOLVED!" in line and not problemName:
+                    problemName = line.split(" SOLVED!")[0]
+                    valid = True
+                if "FAILED" in line and not problemName:
+                    problemName = line.split(" FAILED")[0]
+                    valid = False
+                if "validity unknown (not yet checked)" in line and not problemName:
+                    problemName = line.split(" validity")[0]
+                    valid = None
+                if "problem timeout: " in line and not pTimeout:
+                    pTimeout = int(line.split("problem timeout: ")[1])
+                if "depth timeout: " in line and not dTimeout:
+                    dTimeout = int(line.split("depth timeout: ")[1])
+                if "reason failed: timeout" in line:
+                    timeoutBool = True
+                if "geometric series common factor: " in line and not gAllocation:
+                    gAllocation = float(line.split("geometric series common factor: ")[1])
+                if "time: " in line:
+                    finalTime = line.split("time: ")[1]
+                    finalTime = float(finalTime.split(" ")[0])
+            if finalTime:
+                endTimes.append(finalTime)
+            for line in history:
+                if "depth " in line:
+                    temp = line.split("depth ")[1]
+                    parts = temp.split(" ")
+                    currentDepth = int(parts[0])
+                    currentTime = float(parts[2])
+                    if currentDepth in historyDict:
+                        historyDict[currentDepth].append(currentTime)
+                    else:
+                        historyDict[currentDepth] = list()
+                        historyDict[currentDepth].append(currentTime)
+
+        logFolder = f"{constructedFolder}/averaged"
+        Path(logFolder).mkdir(parents=True, exist_ok=True)
+        averageEndTime = statistics.fmean(endTimes)
+        averageHistory = list()
+        for d in historyDict:
+            currentTime = statistics.fmean(historyDict[d])
+            averageHistory.append([currentTime, d])
+        averageHistory = averageHistory[:-1]
+        details = [planList, depth, averageEndTime, timeoutBool, averageHistory]
+
+        results = writeLogs(problemName, logFolder, details, valid, percentageStateSize, stateSize, pTimeout, dTimeout, maxDepth, gAllocation, overwrite=True)
+        fileName = results[2]
+        averageFiles.append(fileName)
+
+    problemFiles = dict()
+    for file in averageFiles:
+        if not file.endswith(".log"):
+            continue
         name = file.rsplit("/", 1)[1]
         if name in problemFiles:
             problemFiles[name].append(file)
         else:
             problemFiles[name] = [file]
-
 
     for n in problemFiles:
         currentFileList = problemFiles[n]
@@ -179,7 +291,7 @@ def combineByProblem(root):
             val = ""
             state = ""
             for i in range(len(parts)):
-                if "logs" == parts[i -1] and "state" in parts[i]:
+                if ("logs" == parts[i-1] or "averaged" == parts[i-1]) and "state" in parts[i]:
                     state = parts[i]
                 elif "invalid" in parts[i]:
                     val = "F"
@@ -193,23 +305,8 @@ def combineByProblem(root):
                 combinedString += currentLog
 
             splitLogs = currentLog.split("history")
-            endDepth = splitLogs[0]
-            endDepthLines = endDepth.splitlines()
             history = splitLogs[1]
             historyLines = history.splitlines()
-            depth = ""
-            time = ""
-            for line in endDepthLines:
-                if "depth: " in line:
-                    depth = line.split("depth: ")[1].strip()
-                if "time: " in line:
-                    time = line.split("time: ")[1]
-                    time = time.split(" ")[0]
-            if depth in depths:
-                depths[depth][state] = time
-            else:
-                depths[depth] = dict()
-                depths[depth][state] = time
             for line in historyLines:
                 if "depth " in line:
                     temp = line.split("depth ")[1]
@@ -221,8 +318,7 @@ def combineByProblem(root):
                     else:
                         depths[depth] = dict()
                         depths[depth][state] = time
-
-        combinedFolder = f"{root}/combined"
+        combinedFolder = f"{constructedFolder}/combined"
         Path(combinedFolder).mkdir(parents=True, exist_ok=True)
         fileName = f"{combinedFolder}/{n}"
         with open(fileName, "w") as final:
@@ -231,12 +327,12 @@ def combineByProblem(root):
         usedStates = set()
         depthLen = 0
         oldKeys = list()
-        for depth in depths:
-            for s in depths[depth]:
+        for current in depths:
+            for s in depths[current]:
                 usedStates.add(s)
-            if len(depth) > depthLen:
-                depthLen = len(depth)
-            oldKeys.append(depth)
+            if len(current) > depthLen:
+                depthLen = len(current)
+            oldKeys.append(current)
         for key in oldKeys:
             newKey = key.zfill(depthLen)
             depths[newKey] = depths.pop(key)
@@ -245,29 +341,42 @@ def combineByProblem(root):
         usedStates.reverse()
         depths = collections.OrderedDict(sorted(depths.items()))
 
-        tableString = "depth"
+        mdTableString = "|depth"
+        csvTableString = "depth"
         for state in usedStates:
-            tableString += f"\t|{state}"
-        tableString += "\n"
+            mdTableString += f"\t|{state}"
+            csvTableString += f",{state}"
+        mdTableString += "\t|\n"
+        csvTableString += "\n"
 
         for depth in depths:
             currentDepths = depths[depth]
-            tableString += depth
+            mdTableString += f"|{depth}"
+            csvTableString += f"{depth}"
             for state in usedStates:
                 if state in currentDepths:
                     currentTime = currentDepths[state]
                     roundedTime = float('%.5g' % float(currentTime))
-                    tableString += f"\t|{roundedTime}"
+                    mdTableString += f"\t|{roundedTime}"
+                    csvTableString += f",{roundedTime}"
                 else:
-                    tableString += f"\t|-"
-            tableString += "\n"
-        tableString = tableString[:-1]
-        tableFolder = f"{combinedFolder}/tables"
-        Path(tableFolder).mkdir(parents=True, exist_ok=True)
-        fileName = f"{tableFolder}/{n}"
-        with open(fileName, "w") as final:
-            final.write(tableString)
+                    mdTableString += f"\t|-"
+                    csvTableString += f","
+            mdTableString += "\t|\n"
+            csvTableString += "\n"
+        mdTableString = mdTableString[:-1]
+        csvTableString = csvTableString[:-1]
+        mdTableFolder = f"{constructedFolder}/tables/md"
+        csvTableFolder = f"{constructedFolder}/tables/csv"
+        Path(mdTableFolder).mkdir(parents=True, exist_ok=True)
+        Path(csvTableFolder).mkdir(parents=True, exist_ok=True)
+        mdFile = f"{mdTableFolder}/{n}"
+        with open(mdFile, "w") as md:
+            md.write(mdTableString)
+        csvFile = f"{csvTableFolder}/{n}"
+        with open(csvFile, "w") as csv:
+            csv.write(csvTableString)
 
 if __name__ == "__main__":
     inputFolder = sys.argv[1]
-    combineByProblem(inputFolder)
+    corrolate(inputFolder)

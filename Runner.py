@@ -9,7 +9,7 @@ import datetime
 from ParsePDDL import parse
 from CProgramWriter import writeProgram
 from CBMCSolver import solve
-from LogWriter import writeLogs, getLogFileName, combineByProblem
+from LogWriter import writeLogs, corrolate
 from Validator import validate
 
 startTime = 0
@@ -28,7 +28,7 @@ geoAllocation = 0
 stateSize = 1
 loadBool = False
 stopOnInvalid = False
-rewrite = False
+numRuns = 1
 
 def save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems):
     el = "\n"
@@ -121,7 +121,6 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
                     oldActionNames, newActionNames, objectToNum, concise, 
                     verbose, pTimeout, dTimeout, geoAllocation)
 
-    stopExecution = False
     
     if results[0]:
         print(f"validating plan to solve {cName}:")
@@ -133,7 +132,7 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
             print("\tplan invalid")
     else:
         valid = False
-    
+    stopExecution = False
     if stopOnInvalid and not valid:
         stopExecution = True
 
@@ -216,20 +215,11 @@ def run():
             
             with open(current, "r") as f:
                 contents = f.read()
-            toIgnore = False
-            if not rewrite:
-                temp = contents.split("(define (problem ")[1]
-                name = temp.split(")", 1)[0]
-                possibleLogFiles = getLogFileName(logOutFolder,stateSize, maxDepth, pTimeout, dTimeout, geoAllocation, name)
-                for p in possibleLogFiles:
-                    if os.path.isfile(p):
-                        toIgnore = True
-                        break
             
             temp = contents.split("(:domain ")[1]
             currentDomain = temp.split(")")[0]
             
-            if currentDomain in domains and not toIgnore:
+            if currentDomain in domains:
                 domainProblems[currentDomain].append(current)
 
         if not loadBool:
@@ -249,16 +239,15 @@ def run():
                         raise ValueError(
                             f"Sorry the allowed requirements are currently limited and {requirement} is not allowed"
                         )
-                
-                log, stopExecution = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, 
-                                                          prob, domains[dom], (problemNum, numProblems))
-                problemNum += 1
-                problemsRun.append(prob)
-                save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems)
-                logs.append(log)
-                
-                if stopExecution:
-                    break
+                for iteration in range(numRuns):
+                    log, stopExecution = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder,
+                                                              prob, domains[dom], (problemNum, numProblems))
+                    problemNum += 1
+                    problemsRun.append(prob)
+                    save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems)
+                    logs.append(log)
+                    if stopExecution:
+                        break
     else:
         print(f"Combining Domain: {domain} with problem: {problem}")
         parsedProblem = parse(domain, problem)
@@ -272,11 +261,11 @@ def run():
         
         cOutFolder = f"{rootFolder}/output/cFiles"
         logOutFolder = f"{rootFolder}/output/logs"
-        
-        log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problem, domain)
-        logs.append(log)
+        for iteration in range(numRuns):
+            log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problem, domain)
+            logs.append(log)
 
-    combineByProblem(logOutFolder)
+    corrolate(logOutFolder)
     if not concise:
         first = True
         print("\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/")
@@ -341,12 +330,12 @@ def main():
                         help='Continue execution from where it was interrupted')
     parser.add_argument('-si', '--stopOnInvalid', action='store_true', default=False,
                         help='Stops the program execution on the first invalid problem, instead of continuing')
-    parser.add_argument('-r', '--rewrite', action='store_true', default=False,
-                        help='run problems with logs allready written and rewrite them')
+    parser.add_argument('-n', '--numRuns', type=int, default=1,
+                        help='number of times to run each problem')
 
     args = parser.parse_args()
     global domain, problem, multi, startingDepth, depthStep, maxDepth, manualDepth, verbose, concise
-    global pTimeout, dTimeout, geoAllocation, stateSize, loadBool, stopOnInvalid, startTime, rewrite
+    global pTimeout, dTimeout, geoAllocation, stateSize, loadBool, stopOnInvalid, startTime, numRuns
 
     # XOR check
     if bool(args.domain) != bool(args.problem):
@@ -383,7 +372,7 @@ def main():
     stateSize = args.stateSize
     loadBool = args.load
     stopOnInvalid = args.stopOnInvalid
-    rewrite = args.rewrite
+    numRuns = args.numRuns
 
     startTime = timeit.default_timer()
     signal.signal(signal.SIGINT, inturruptHandler)
