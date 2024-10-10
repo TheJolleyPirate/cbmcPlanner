@@ -1,0 +1,12 @@
+blocks-4-2 FAILED
+	reason failed: no plan found
+problem details:
+	state size: 4
+	maximum depth: 10
+with
+	depth: 5
+	time: 0.10 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds

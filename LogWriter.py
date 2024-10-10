@@ -5,7 +5,6 @@ import statistics
 import sys
 from pathlib import Path
 
-
 def getLogFileName(logOutFolder, problemStateSize, maximumDepth, pTimeout, dTimeout, gAllocation, problem, plan = False, timeoutBool = False, valid = "indet"):
     stateSizePercentage = "{:.0%}".format(problemStateSize)
     logOutFolder += f"/state{stateSizePercentage}"
@@ -123,14 +122,11 @@ def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realState
     # Log history of execution times
     if history is not None:
         fileLogs += "history:\n"
-        afterLoop = 1
         for i in range(len(history)):
             current = history[i]
             runTime = "{:0.2f}".format(current[0])
             runDepth = current[1]
             fileLogs += f"\t{i + 1}: depth {runDepth} in {runTime} seconds\n"
-            afterLoop = i + 2
-        fileLogs += f"\t{afterLoop}: depth {depth} in {formattedTime} seconds\n"
 
     # Prepare output folder based on problem state size and other parameters
     fileName = getLogFileName(logOutFolder, problemStateSize, maximumDepth, pTimeout, dTimeout, gAllocation, problem, plan, timeoutBool, valid)
@@ -160,7 +156,6 @@ def sorted_nicely(l):
     convert = lambda text: int(text) if text.isdigit() else text
     alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
     return sorted(l, key=alphanum_key)
-
 
 def corrolate(root):
     files = list()
@@ -378,5 +373,9 @@ def corrolate(root):
             csv.write(csvTableString)
 
 if __name__ == "__main__":
-    inputFolder = sys.argv[1]
-    corrolate(inputFolder)
+    argFolder = sys.argv[1]
+    if argFolder is None:
+        argFolder = "output"
+    elif not os.path.isdir(argFolder):
+        raise ValueError("provided argument is not a vaild directory")
+    corrolate(argFolder)

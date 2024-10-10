@@ -1,0 +1,159 @@
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.26 seconds
+history:
+	1: depth 1 in 0.13 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.10 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.32 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.07 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.09 seconds
+	6: depth 6 in 0.09 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.35 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.11 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.07 seconds
+	6: depth 6 in 0.09 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.53 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.09 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.23 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.10 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.15 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.08 seconds
+	3: depth 3 in 0.06 seconds
+	4: depth 4 in 0.07 seconds
+	5: depth 5 in 0.09 seconds
+	6: depth 6 in 0.11 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.46 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.07 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.09 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.54 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.10 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.01 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.11 seconds
+breakbreakbreak
+mixed-f4-p2-u0-v0-g0-a0-n0-a0-b0-n0-f0-r2 SOLVED!
+problem details:
+	state size: 52
+	maximum depth: 10
+with:
+	plan: 0: (board f0 p1) 1: (up f0 f3) 2: (board f3 p0) 3: (down f3 f0) 4: (depart f0 p0) 5: (up f0 f2) 6: (depart f2 p1) 
+	depth: 7
+	time: 10.41 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.07 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.11 seconds
+	6: depth 6 in 0.08 seconds

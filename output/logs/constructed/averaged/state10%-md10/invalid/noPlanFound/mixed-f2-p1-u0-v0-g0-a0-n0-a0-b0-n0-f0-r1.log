@@ -1,0 +1,11 @@
+mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: no plan found
+problem details:
+	state size: 5
+	maximum depth: 10
+with
+	depth: 4
+	time: 0.10 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.09 seconds

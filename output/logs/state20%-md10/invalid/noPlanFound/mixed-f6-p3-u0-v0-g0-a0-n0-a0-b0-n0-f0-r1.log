@@ -1,0 +1,199 @@
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 640.22 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.12 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.12 seconds
+	7: depth 7 in 0.09 seconds
+	8: depth 8 in 0.08 seconds
+	9: depth 9 in 0.11 seconds
+	10: depth 10 in 640.22 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 645.52 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.12 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.11 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.11 seconds
+	7: depth 7 in 0.12 seconds
+	8: depth 8 in 0.11 seconds
+	9: depth 9 in 0.11 seconds
+	10: depth 10 in 645.52 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 639.49 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.11 seconds
+	3: depth 3 in 0.12 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.11 seconds
+	6: depth 6 in 0.09 seconds
+	7: depth 7 in 0.10 seconds
+	8: depth 8 in 0.11 seconds
+	9: depth 9 in 0.10 seconds
+	10: depth 10 in 639.49 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 645.12 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.10 seconds
+	7: depth 7 in 0.10 seconds
+	8: depth 8 in 0.12 seconds
+	9: depth 9 in 0.10 seconds
+	10: depth 10 in 645.12 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 643.18 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.11 seconds
+	3: depth 3 in 0.11 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.11 seconds
+	7: depth 7 in 0.10 seconds
+	8: depth 8 in 0.10 seconds
+	9: depth 9 in 0.12 seconds
+	10: depth 10 in 643.18 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 646.83 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.12 seconds
+	6: depth 6 in 0.11 seconds
+	7: depth 7 in 0.11 seconds
+	8: depth 8 in 0.10 seconds
+	9: depth 9 in 0.09 seconds
+	10: depth 10 in 646.83 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 642.92 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.14 seconds
+	4: depth 4 in 0.12 seconds
+	5: depth 5 in 0.09 seconds
+	6: depth 6 in 0.11 seconds
+	7: depth 7 in 0.11 seconds
+	8: depth 8 in 0.10 seconds
+	9: depth 9 in 0.12 seconds
+	10: depth 10 in 642.92 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 643.72 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.11 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.11 seconds
+	6: depth 6 in 0.09 seconds
+	7: depth 7 in 0.11 seconds
+	8: depth 8 in 0.08 seconds
+	9: depth 9 in 0.09 seconds
+	10: depth 10 in 643.72 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 641.62 seconds
+history:
+	1: depth 1 in 0.12 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.09 seconds
+	6: depth 6 in 0.10 seconds
+	7: depth 7 in 0.10 seconds
+	8: depth 8 in 0.08 seconds
+	9: depth 9 in 0.10 seconds
+	10: depth 10 in 641.62 seconds
+breakbreakbreak
+mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 73
+	maximum depth: 10
+with
+	depth: 10
+	time: 641.11 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.10 seconds
+	6: depth 6 in 0.11 seconds
+	7: depth 7 in 0.12 seconds
+	8: depth 8 in 0.11 seconds
+	9: depth 9 in 0.11 seconds
+	10: depth 10 in 641.11 seconds

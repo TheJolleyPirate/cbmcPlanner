@@ -1,0 +1,159 @@
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.55 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 5.20 seconds
+	6: depth 6 in 13.55 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.33 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.11 seconds
+	4: depth 4 in 0.11 seconds
+	5: depth 5 in 5.14 seconds
+	6: depth 6 in 13.33 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.52 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 5.20 seconds
+	6: depth 6 in 13.52 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.37 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 5.26 seconds
+	6: depth 6 in 13.37 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.35 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 5.31 seconds
+	6: depth 6 in 13.35 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.52 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.08 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.08 seconds
+	5: depth 5 in 5.15 seconds
+	6: depth 6 in 13.52 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.52 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.07 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.08 seconds
+	5: depth 5 in 5.27 seconds
+	6: depth 6 in 13.52 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.38 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 5.28 seconds
+	6: depth 6 in 13.38 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.53 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.08 seconds
+	3: depth 3 in 0.07 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 5.29 seconds
+	6: depth 6 in 13.53 seconds
+breakbreakbreak
+blocks-4-2 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack c b) 1: (stack c d) 2: (pick-up b) 3: (stack b c) 4: (pick-up a) 5: (stack a b) 
+	depth: 6
+	time: 13.64 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 5.17 seconds
+	6: depth 6 in 13.64 seconds

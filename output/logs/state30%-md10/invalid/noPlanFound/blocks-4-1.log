@@ -1,0 +1,199 @@
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.97 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.11 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 3.68 seconds
+	6: depth 6 in 6.32 seconds
+	7: depth 7 in 10.08 seconds
+	8: depth 8 in 13.99 seconds
+	9: depth 9 in 20.89 seconds
+	10: depth 10 in 30.97 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.79 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.08 seconds
+	5: depth 5 in 3.75 seconds
+	6: depth 6 in 6.56 seconds
+	7: depth 7 in 9.84 seconds
+	8: depth 8 in 13.83 seconds
+	9: depth 9 in 20.77 seconds
+	10: depth 10 in 30.79 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.84 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 3.80 seconds
+	6: depth 6 in 6.33 seconds
+	7: depth 7 in 9.80 seconds
+	8: depth 8 in 14.40 seconds
+	9: depth 9 in 21.15 seconds
+	10: depth 10 in 30.84 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.69 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.08 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 3.64 seconds
+	6: depth 6 in 6.37 seconds
+	7: depth 7 in 9.82 seconds
+	8: depth 8 in 14.30 seconds
+	9: depth 9 in 21.06 seconds
+	10: depth 10 in 30.69 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.80 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 3.78 seconds
+	6: depth 6 in 6.31 seconds
+	7: depth 7 in 10.30 seconds
+	8: depth 8 in 13.98 seconds
+	9: depth 9 in 21.43 seconds
+	10: depth 10 in 30.80 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.72 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 3.78 seconds
+	6: depth 6 in 6.48 seconds
+	7: depth 7 in 10.14 seconds
+	8: depth 8 in 14.17 seconds
+	9: depth 9 in 21.16 seconds
+	10: depth 10 in 30.72 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.81 seconds
+history:
+	1: depth 1 in 0.09 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 3.64 seconds
+	6: depth 6 in 6.32 seconds
+	7: depth 7 in 10.24 seconds
+	8: depth 8 in 13.97 seconds
+	9: depth 9 in 21.58 seconds
+	10: depth 10 in 30.81 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 30.64 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 3.64 seconds
+	6: depth 6 in 6.52 seconds
+	7: depth 7 in 10.21 seconds
+	8: depth 8 in 14.28 seconds
+	9: depth 9 in 21.11 seconds
+	10: depth 10 in 30.64 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 31.32 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.08 seconds
+	5: depth 5 in 3.65 seconds
+	6: depth 6 in 6.37 seconds
+	7: depth 7 in 9.83 seconds
+	8: depth 8 in 14.12 seconds
+	9: depth 9 in 21.12 seconds
+	10: depth 10 in 31.32 seconds
+breakbreakbreak
+blocks-4-1 FAILED
+	reason failed: depth out
+problem details:
+	state size: 13
+	maximum depth: 10
+with
+	depth: 10
+	time: 31.23 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 3.78 seconds
+	6: depth 6 in 6.59 seconds
+	7: depth 7 in 10.27 seconds
+	8: depth 8 in 14.09 seconds
+	9: depth 9 in 20.99 seconds
+	10: depth 10 in 31.23 seconds

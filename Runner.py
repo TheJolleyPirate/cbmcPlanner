@@ -96,10 +96,10 @@ def load():
 
 def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, domainFile, positionInfo=None):
     if positionInfo is None:
-        print("writing c program")
+        print(f"writing c program with state size: {stateSize * 100}%")
     else:
-        print(f"writing c program {positionInfo[0]}/{positionInfo[1]}")
-    
+        print(f"writing c program {positionInfo[0]}/{positionInfo[1]} with state size: {stateSize * 100}%")
+    #write the c file
     cFile, realStateSize, objectToNum, problemName = writeProgram(parsedProblem, cOutFolder, stateSize)
     
     oldActionNames = list()
@@ -111,36 +111,42 @@ def executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problemFile, d
         newActionNames.append(newName)
 
     cName = str(cFile).split("/")[-1]
-    
-    if concise:
-        print(f"solving {problemName} with CBMC")
-    else:
-        print(f"solving {problemName} with CBMC:")
-    
-    results = solve(cFile, maxDepth, manualDepth, startingDepth, depthStep, 
-                    oldActionNames, newActionNames, objectToNum, concise, 
-                    verbose, pTimeout, dTimeout, geoAllocation)
-
-    
-    if results[0]:
-        print(f"validating plan to solve {cName}:")
-        valid = validate(results[0], domainFile, problemFile, verbose)
-        
-        if valid:
-            print("\tplan valid")
-        else:
-            print("\tplan invalid")
-    else:
-        valid = False
     stopExecution = False
-    if stopOnInvalid and not valid:
-        stopExecution = True
+    first = True
+    localConcise = concise
+    for iteration in range(numRuns):
+        if first:
+            first = False
+        elif not verbose:
+            localConcise = True
+        solveString = f"solving {problemName} with CBMC"
+        if positionInfo is not None:
+            solveString += f", problem: {positionInfo[0]}/{positionInfo[1]}"
+        if numRuns > 1:
+            solveString += f", iteration: {iteration + 1}/{numRuns}"
+        print(solveString)
+        #solve the c file
+        results = solve(cFile, maxDepth, manualDepth, startingDepth, depthStep,
+                        oldActionNames, newActionNames, objectToNum, localConcise,
+                        verbose, pTimeout, dTimeout, geoAllocation)
+        if results[0]:
+            if not localConcise:
+                print(f"validating plan to solve {cName}:")
+            valid = validate(results[0], domainFile, problemFile, verbose)
 
-    problemLogs = writeLogs(problemName, logOutFolder, results, valid, 
-                             stateSize, realStateSize, pTimeout, 
-                             dTimeout, maxDepth, geoAllocation)
-    
-    return problemLogs, stopExecution
+            if valid and not localConcise:
+                print("\tplan valid")
+            elif not localConcise:
+                print("\tplan invalid")
+        else:
+            valid = False
+        #write logs to file
+        writeLogs(problemName, logOutFolder, results, valid, stateSize,
+                  realStateSize, pTimeout, dTimeout, maxDepth, geoAllocation)
+        if stopOnInvalid and not valid:
+            stopExecution = True
+            break
+    return stopExecution
 
 def sorted_nicely(l):
     """ Sort the given iterable in a human-friendly way. """
@@ -152,25 +158,11 @@ def sorted_nicely(l):
     return sorted(l, key=alphanum_key)
 
 def run():
-    logs = list()
     allowedRequirements = [":strips", ":typing", ":equality", ":disjunctive-preconditions", 
                            ":negation", ":negative-preconditions"]
     # TODO, ":conditional-effects", ":universal-preconditions", ":quantified-preconditions",
     #  ":existential-preconditions", ":adl", ":derived-predicates", ":action-costs",":fluents", ":numeric-fluents",
     #  ":domain-axioms", ":safety-constraints", ":ucpop"]
-
-    # unimplemented requirements needed by supurviser domains:
-    # cave-diving: conditional-effects  action-costs
-    # GED: adl(quantified-preconditions(universal-preconditions existential-preconditions) conditional-effects)
-    #   derived-predicates fluents action-costs functions(numeric-fluents)
-    # I don't think that this can support action-costs as CBMC does not support them
-    # Fully supported:
-    # pipesworld-tankage: n/a
-
-    # requirements not currently planned to be implemented:
-    #   :action-expansions :foreach-expansions :dag-expansions :subgoals-through-axioms :expression-evaluation
-    #   :open-world :true-negation :durative-actions :durative-inequalities :continuous-effects :timed-initial-literals
-    #   :preferences :constraints
     if multi:
         problemNum = None
         numProblems = None
@@ -237,17 +229,15 @@ def run():
                 for requirement in parsedProblem.requirements.requirements:
                     if requirement not in allowedRequirements:
                         raise ValueError(
-                            f"Sorry the allowed requirements are currently limited and {requirement} is not allowed"
+                            f"Sorry the allowed requirements are limited and {requirement} is not allowed"
                         )
-                for iteration in range(numRuns):
-                    log, stopExecution = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder,
-                                                              prob, domains[dom], (problemNum, numProblems))
-                    problemNum += 1
-                    problemsRun.append(prob)
-                    save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems)
-                    logs.append(log)
-                    if stopExecution:
-                        break
+                stopExecution = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder,
+                                                          prob, domains[dom], (problemNum, numProblems))
+                problemNum += 1
+                problemsRun.append(prob)
+                save(problemsRun, inputFolder, cOutFolder, logOutFolder, problemNum, numProblems)
+                if stopExecution:
+                    break
     else:
         print(f"Combining Domain: {domain} with problem: {problem}")
         parsedProblem = parse(domain, problem)
@@ -256,30 +246,16 @@ def run():
         for requirement in parsedProblem.requirements.requirements:
             if requirement not in allowedRequirements:
                 raise ValueError(
-                    f"Sorry the allowed requirements are currently limited and {requirement} is not allowed"
+                    f"Sorry the allowed requirements are limited and {requirement} is not allowed"
                 )
         
         cOutFolder = f"{rootFolder}/output/cFiles"
         logOutFolder = f"{rootFolder}/output/logs"
-        for iteration in range(numRuns):
-            log = executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problem, domain)
-            logs.append(log)
-
+        executeSingleProblem(parsedProblem, cOutFolder, logOutFolder, problem, domain)
     corrolate(logOutFolder)
     if not concise:
-        first = True
-        print("\\|/\\|/\\|/\\|/\\|/\\|/\\|/\\|/")
-        
-        for log in logs:
-            if not first:
-                print("")
-            else:
-                first = False
-            
-            if verbose:
-                print(log[0])
-            else:
-                print(log[1])
+        print("logs printed to:")
+        print(f"\t{os.path.abspath(logOutFolder)}")
 
 def inturruptHandler(signalType, frame):
     global startTime
@@ -384,13 +360,9 @@ def main():
     formattedTime = datetime.timedelta(seconds=elapsedTime)
     formattedTime = str(formattedTime).split(".")[0]
 
-    print("/|\\/|\\/|\\/|\\/|\\/|\\/|\\/|\\")
+    print("------------------------")
     print("overall run time (H:MM:SS): " + str(formattedTime))
     print("------------------------")
-    # TODO: madagascar: test problems in another planning tool to get plan lengths
-    # TODO: Implement Regression Testing
-    # TODO: test each problem with different depths, timeouts, and state sizes then make graph
-    # TODO: write report
 
 if __name__ == "__main__":
     main()

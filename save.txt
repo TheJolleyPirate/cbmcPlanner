@@ -1,18 +1,35 @@
-input folder: input/stockhold/zExampleProblems
-c files output folder: input/stockhold/zExampleProblems/output/cFiles
-log files output folder: input/stockhold/zExampleProblems/output/logs
+input folder: input
+c files output folder: output/cFiles
+log files output folder: output/logs
 starting depth: 1
 depth step: 1
-max depth: 0
+max depth: 10
 manual depth: 0
 verbose: False
 concise: False
 p timeout: 0
-d timeout: 300
+d timeout: 0
 geo allocation: 0
-state size: 100%
-problem number: 3
-number of problems: 2
+state size: 10.0%
+problem number: 20
+number of problems: 19
 <><><><><><><><><>
-input/stockhold/zExampleProblems/exampleProblem2.pddl
-input/stockhold/zExampleProblems/exampleProblem.pddl
+input/probBLOCKS-4-0.pddl
+input/probBLOCKS-4-1.pddl
+input/probBLOCKS-4-2.pddl
+input/probBLOCKS-5-1.pddl
+input/s1-0.pddl
+input/s1-1.pddl
+input/s1-2.pddl
+input/s1-3.pddl
+input/s1-4.pddl
+input/s2-0.pddl
+input/s2-1.pddl
+input/s2-2.pddl
+input/s2-3.pddl
+input/s2-4.pddl
+input/s3-0.pddl
+input/s3-1.pddl
+input/s3-2.pddl
+input/s3-3.pddl
+input/s3-4.pddl

@@ -31,6 +31,11 @@ def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, last
             print(f"\r\trunning {fileName} with depth {depth}", end='')
         else:
             print(f"\r\trunning {fileName} with depth {depth}, previous depth time: {lastStepTime:.2f} seconds", end='')
+    else:
+        if not lastStepTime:
+            print(f"\r\trunning problem with depth {depth}", end='')
+        else:
+            print(f"\r\trunning problem with depth {depth}, last depth time: {lastStepTime:.2f} secs", end='')
 
     # Update command list with current depth
     cmdList[-1] = str(depth)
@@ -51,10 +56,6 @@ def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, last
         # Check for violated properties in the results
         goalChecker = results.split("Violated property:")
         if "GOAL CHECKER: FAIL MEANS PLAN FOUND" in goalChecker[-1]:
-            if not concise:
-                print(f"\ntime: {time:.2f} seconds")
-            if verbose:
-                print(results)
             if len(goalChecker) > 1:
                 toProcess = goalChecker[-2]
             else:
@@ -63,7 +64,6 @@ def individualSolver(cFile: str, cmdList, depth, timeout, concise, verbose, last
     except subprocess.TimeoutExpired:
         # Handle timeout scenario
         if gAllocation <= 1:
-            print("")
             timeoutBool = True
         time = timeout
 
@@ -98,7 +98,7 @@ def solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dtimeout, 
     currentTime = 0
     history = list()
     d = dtimeout
-
+    totalTime = 0
     while True:
         if maxDepth and depth >= maxDepth:
             break
@@ -112,6 +112,7 @@ def solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dtimeout, 
         # Solve the individual problem at the current depth
         results = individualSolver(cFile, cmdList, depth, d, concise, verbose, currentTime, gAllocation)
         currentTime = results[1]
+        totalTime += currentTime
         planFound = bool(results[0])
         stateBool = results[3]
         if gAllocation <= 1:
@@ -125,7 +126,7 @@ def solveLoop(startDepth, maxDepth, depthStep, gAllocation, pTimeout, dtimeout, 
 
         history.append((currentTime, depth))
 
-    return toProcess, currentTime, timeoutBool, depth, history, d
+    return toProcess, currentTime, timeoutBool, depth, history, totalTime
 
 def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, newActionNames, objectToNum, concise,
           verbose, pTimeout, dTimeout, gAllocation):
@@ -163,7 +164,7 @@ def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, n
         timeoutBool = results[2]
         depth = results[3]
         history = results[4]
-        timeout = results[5]
+        totalTime = results[5]
 
     else:
         # Handle the case of manual depth solving
@@ -172,10 +173,11 @@ def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, n
         toProcess = results[0]
         finalTime = results[1]
         timeoutBool = results[2]
-        timeout = results[5]
         history = None
+        totalTime = results[5]
 
     # Process the result if a plan was found and no timeout occurred
+    planInfo = False
     if toProcess and not timeoutBool:
         lines = toProcess.splitlines()
         planList = list()
@@ -201,16 +203,31 @@ def solve(cFile, maxDepth, manualDepth, startDepth, depthStep, oldActionNames, n
                     var = objectToNum[int(varNum)]
                     action += " " + var
                 planList.append(action)
-        print(f"found plan: {planList}")
         planInfo = planList
-
-    else:
-        # Handle the cases where no plan was found or timeout occurred
-        if timeoutBool:
-            print(f"timeout: {timeout} seconds")
+    resultsString = ""
+    if planInfo:
+        if not concise:
+            resultsString += f"\n\tfound plan: {planInfo}"
         else:
-            print(f"\nno plan found with time {timeout} seconds")
-        planInfo = False  # Set plan info to False
+            resultsString += f", found plan"
+    else:
+        if timeoutBool:
+            if not concise:
+                resultsString += "\n\tfailed due to timeout"
+            else:
+                resultsString += ", failed; timeout"
+        else:
+            if not concise:
+                resultsString += "\n\tfailed due to no plan found"
+            else:
+                resultsString += ", failed; no plan found"
+    if not concise:
+        resultsString += f"\n\tfinal time: {finalTime:.2f} seconds"
+        resultsString += f"\n\toverall time: {totalTime:.2f} seconds"
+    else:
+        resultsString += f"\n\tfinal time: {finalTime:.2f} secs"
+        resultsString += f", overall time: {totalTime:.2f} secs"
+    print(resultsString)
 
     return planInfo, depth, finalTime, timeoutBool, history
 

@@ -1,0 +1,199 @@
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 83.32 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 4.28 seconds
+	6: depth 6 in 10.02 seconds
+	7: depth 7 in 14.99 seconds
+	8: depth 8 in 22.27 seconds
+	9: depth 9 in 60.36 seconds
+	10: depth 10 in 83.32 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 81.05 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.08 seconds
+	5: depth 5 in 4.02 seconds
+	6: depth 6 in 9.24 seconds
+	7: depth 7 in 14.24 seconds
+	8: depth 8 in 22.09 seconds
+	9: depth 9 in 58.26 seconds
+	10: depth 10 in 81.05 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 80.36 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 4.10 seconds
+	6: depth 6 in 9.16 seconds
+	7: depth 7 in 14.27 seconds
+	8: depth 8 in 21.66 seconds
+	9: depth 9 in 57.84 seconds
+	10: depth 10 in 80.36 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 81.13 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.11 seconds
+	5: depth 5 in 4.06 seconds
+	6: depth 6 in 9.15 seconds
+	7: depth 7 in 14.24 seconds
+	8: depth 8 in 21.79 seconds
+	9: depth 9 in 57.51 seconds
+	10: depth 10 in 81.13 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 80.70 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.11 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.12 seconds
+	5: depth 5 in 4.00 seconds
+	6: depth 6 in 9.11 seconds
+	7: depth 7 in 14.33 seconds
+	8: depth 8 in 21.79 seconds
+	9: depth 9 in 57.12 seconds
+	10: depth 10 in 80.70 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 80.89 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 4.07 seconds
+	6: depth 6 in 9.36 seconds
+	7: depth 7 in 14.02 seconds
+	8: depth 8 in 21.69 seconds
+	9: depth 9 in 57.56 seconds
+	10: depth 10 in 80.89 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 80.08 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.08 seconds
+	5: depth 5 in 4.05 seconds
+	6: depth 6 in 9.11 seconds
+	7: depth 7 in 14.03 seconds
+	8: depth 8 in 21.42 seconds
+	9: depth 9 in 57.45 seconds
+	10: depth 10 in 80.08 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 80.02 seconds
+history:
+	1: depth 1 in 0.10 seconds
+	2: depth 2 in 0.08 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 4.16 seconds
+	6: depth 6 in 9.31 seconds
+	7: depth 7 in 14.21 seconds
+	8: depth 8 in 21.72 seconds
+	9: depth 9 in 57.38 seconds
+	10: depth 10 in 80.02 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 80.62 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.10 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 4.07 seconds
+	6: depth 6 in 9.15 seconds
+	7: depth 7 in 13.98 seconds
+	8: depth 8 in 21.65 seconds
+	9: depth 9 in 57.83 seconds
+	10: depth 10 in 80.62 seconds
+breakbreakbreak
+blocks-4-1 SOLVED!
+problem details:
+	state size: 45
+	maximum depth: 11
+with:
+	plan: 0: (unstack b c) 1: (put-down b) 2: (unstack c a) 3: (put-down c) 4: (unstack a d) 5: (stack a b) 6: (pick-up c) 7: (stack c a) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 80.53 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.08 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 4.08 seconds
+	6: depth 6 in 9.26 seconds
+	7: depth 7 in 14.20 seconds
+	8: depth 8 in 21.70 seconds
+	9: depth 9 in 57.77 seconds
+	10: depth 10 in 80.53 seconds

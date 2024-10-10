@@ -1,0 +1,18 @@
+blocks-5-1 SOLVED!
+problem details:
+	state size: 26
+	maximum depth: 10
+with:
+	plan: 0: (unstack b a) 1: (stack b c) 2: (unstack a d) 3: (stack a e) 4: (unstack b c) 5: (stack b a) 6: (pick-up c) 7: (stack c b) 8: (pick-up d) 9: (stack d c) 
+	depth: 10
+	time: 3212.42 seconds
+history:
+	1: depth 1 in 0.11 seconds
+	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.10 seconds
+	4: depth 4 in 0.10 seconds
+	5: depth 5 in 0.09 seconds
+	6: depth 6 in 20.32 seconds
+	7: depth 7 in 66.63 seconds
+	8: depth 8 in 219.92 seconds
+	9: depth 9 in 813.94 seconds
