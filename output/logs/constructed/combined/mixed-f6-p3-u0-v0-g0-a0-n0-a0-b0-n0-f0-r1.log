@@ -16,6 +16,8 @@ history:
 	6: depth 6 in 0.10 seconds
 	7: depth 7 in 0.10 seconds
 	8: depth 8 in 0.10 seconds
+	9: depth 9 in 0.10 seconds
+	10: depth 10 in 0.15 seconds
 output/logs/constructed/averaged/state20%-md10/invalid/noPlanFound/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
 	reason failed: depth out
@@ -35,6 +37,7 @@ history:
 	7: depth 7 in 0.11 seconds
 	8: depth 8 in 0.10 seconds
 	9: depth 9 in 0.11 seconds
+	10: depth 10 in 642.97 seconds
 output/logs/constructed/averaged/state30%-md10/invalid/noPlanFound/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
 	reason failed: depth out
@@ -54,6 +57,7 @@ history:
 	7: depth 7 in 0.11 seconds
 	8: depth 8 in 0.10 seconds
 	9: depth 9 in 0.10 seconds
+	10: depth 10 in 198.63 seconds
 output/logs/constructed/averaged/state40%-md10/invalid/noPlanFound/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 FAILED
 	reason failed: depth out
@@ -73,6 +77,7 @@ history:
 	7: depth 7 in 0.11 seconds
 	8: depth 8 in 0.11 seconds
 	9: depth 9 in 0.11 seconds
+	10: depth 10 in 391.72 seconds
 output/logs/constructed/averaged/state50%-md11/valid/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 SOLVED!
 problem details:
@@ -93,6 +98,7 @@ history:
 	8: depth 8 in 0.11 seconds
 	9: depth 9 in 0.10 seconds
 	10: depth 10 in 342.79 seconds
+	11: depth 11 in 480.98 seconds
 output/logs/constructed/averaged/state60%-md11/valid/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 SOLVED!
 problem details:
@@ -113,6 +119,7 @@ history:
 	8: depth 8 in 0.11 seconds
 	9: depth 9 in 0.11 seconds
 	10: depth 10 in 637.60 seconds
+	11: depth 11 in 334.93 seconds
 output/logs/constructed/averaged/state70%-md11/valid/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 SOLVED!
 problem details:
@@ -133,6 +140,7 @@ history:
 	8: depth 8 in 0.10 seconds
 	9: depth 9 in 0.10 seconds
 	10: depth 10 in 180.97 seconds
+	11: depth 11 in 333.04 seconds
 output/logs/constructed/averaged/state80%-md11/valid/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 SOLVED!
 problem details:
@@ -153,6 +161,7 @@ history:
 	8: depth 8 in 0.10 seconds
 	9: depth 9 in 0.11 seconds
 	10: depth 10 in 463.22 seconds
+	11: depth 11 in 273.61 seconds
 output/logs/constructed/averaged/state90%-md11/valid/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 SOLVED!
 problem details:
@@ -173,6 +182,7 @@ history:
 	8: depth 8 in 0.10 seconds
 	9: depth 9 in 0.10 seconds
 	10: depth 10 in 344.17 seconds
+	11: depth 11 in 484.51 seconds
 output/logs/constructed/averaged/state100%-md11/valid/mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1.log
 mixed-f6-p3-u0-v0-g0-a0-n0-a0-b0-n0-f0-r1 SOLVED!
 problem details:
@@ -193,3 +203,4 @@ history:
 	8: depth 8 in 0.10 seconds
 	9: depth 9 in 0.11 seconds
 	10: depth 10 in 305.13 seconds
+	11: depth 11 in 673.37 seconds

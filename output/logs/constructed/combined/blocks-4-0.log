@@ -11,6 +11,8 @@ history:
 	1: depth 1 in 0.09 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.09 seconds
 output/logs/constructed/averaged/state20%-md10/invalid/noPlanFound/blocks-4-0.log
 blocks-4-0 FAILED
 	reason failed: no plan found
@@ -24,6 +26,8 @@ history:
 	1: depth 1 in 0.10 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.09 seconds
+	5: depth 5 in 0.10 seconds
 output/logs/constructed/averaged/state30%-md10/invalid/noPlanFound/blocks-4-0.log
 blocks-4-0 FAILED
 	reason failed: depth out
@@ -43,6 +47,7 @@ history:
 	7: depth 7 in 1.05 seconds
 	8: depth 8 in 1.37 seconds
 	9: depth 9 in 1.49 seconds
+	10: depth 10 in 1.71 seconds
 output/logs/constructed/averaged/state40%-md10/invalid/noPlanFound/blocks-4-0.log
 blocks-4-0 FAILED
 	reason failed: depth out
@@ -62,6 +67,7 @@ history:
 	7: depth 7 in 66.07 seconds
 	8: depth 8 in 259.97 seconds
 	9: depth 9 in 846.78 seconds
+	10: depth 10 in 1963.93 seconds
 output/logs/constructed/averaged/state50%-md11/valid/blocks-4-0.log
 blocks-4-0 SOLVED!
 problem details:
@@ -77,6 +83,7 @@ history:
 	3: depth 3 in 0.09 seconds
 	4: depth 4 in 0.09 seconds
 	5: depth 5 in 4.68 seconds
+	6: depth 6 in 14.35 seconds
 output/logs/constructed/averaged/state60%-md11/valid/blocks-4-0.log
 blocks-4-0 SOLVED!
 problem details:
@@ -92,6 +99,7 @@ history:
 	3: depth 3 in 0.09 seconds
 	4: depth 4 in 0.09 seconds
 	5: depth 5 in 5.25 seconds
+	6: depth 6 in 18.44 seconds
 output/logs/constructed/averaged/state70%-md11/valid/blocks-4-0.log
 blocks-4-0 SOLVED!
 problem details:
@@ -107,6 +115,7 @@ history:
 	3: depth 3 in 0.09 seconds
 	4: depth 4 in 0.09 seconds
 	5: depth 5 in 5.09 seconds
+	6: depth 6 in 17.84 seconds
 output/logs/constructed/averaged/state80%-md11/valid/blocks-4-0.log
 blocks-4-0 SOLVED!
 problem details:
@@ -122,6 +131,7 @@ history:
 	3: depth 3 in 0.09 seconds
 	4: depth 4 in 0.10 seconds
 	5: depth 5 in 5.15 seconds
+	6: depth 6 in 17.33 seconds
 output/logs/constructed/averaged/state90%-md11/valid/blocks-4-0.log
 blocks-4-0 SOLVED!
 problem details:
@@ -137,6 +147,7 @@ history:
 	3: depth 3 in 0.09 seconds
 	4: depth 4 in 0.09 seconds
 	5: depth 5 in 5.31 seconds
+	6: depth 6 in 16.68 seconds
 output/logs/constructed/averaged/state100%-md11/valid/blocks-4-0.log
 blocks-4-0 SOLVED!
 problem details:
@@ -152,3 +163,4 @@ history:
 	3: depth 3 in 0.09 seconds
 	4: depth 4 in 0.09 seconds
 	5: depth 5 in 5.41 seconds
+	6: depth 6 in 17.89 seconds

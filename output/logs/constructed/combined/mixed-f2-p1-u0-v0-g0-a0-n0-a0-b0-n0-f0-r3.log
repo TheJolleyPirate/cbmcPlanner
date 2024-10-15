@@ -10,6 +10,8 @@ with
 history:
 	1: depth 1 in 0.09 seconds
 	2: depth 2 in 0.09 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.10 seconds
 output/logs/constructed/averaged/state20%-md10/invalid/noPlanFound/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 FAILED
 	reason failed: depth out
@@ -29,6 +31,7 @@ history:
 	7: depth 7 in 1.46 seconds
 	8: depth 8 in 1.64 seconds
 	9: depth 9 in 2.06 seconds
+	10: depth 10 in 2.49 seconds
 output/logs/constructed/averaged/state30%-md10/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -41,6 +44,8 @@ with:
 history:
 	1: depth 1 in 0.10 seconds
 	2: depth 2 in 0.08 seconds
+	3: depth 3 in 0.09 seconds
+	4: depth 4 in 0.96 seconds
 output/logs/constructed/averaged/state40%-md10/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -54,6 +59,7 @@ history:
 	1: depth 1 in 0.10 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 1.02 seconds
 output/logs/constructed/averaged/state50%-md11/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -67,6 +73,7 @@ history:
 	1: depth 1 in 0.09 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 1.08 seconds
 output/logs/constructed/averaged/state60%-md11/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -80,6 +87,7 @@ history:
 	1: depth 1 in 0.09 seconds
 	2: depth 2 in 0.10 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 1.07 seconds
 output/logs/constructed/averaged/state70%-md11/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -93,6 +101,7 @@ history:
 	1: depth 1 in 0.10 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.10 seconds
+	4: depth 4 in 1.11 seconds
 output/logs/constructed/averaged/state80%-md11/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -106,6 +115,7 @@ history:
 	1: depth 1 in 0.10 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 1.10 seconds
 output/logs/constructed/averaged/state90%-md11/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -119,6 +129,7 @@ history:
 	1: depth 1 in 0.11 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 1.18 seconds
 output/logs/constructed/averaged/state100%-md11/valid/mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3.log
 mixed-f2-p1-u0-v0-g0-a0-n0-a0-b0-n0-f0-r3 SOLVED!
 problem details:
@@ -132,3 +143,4 @@ history:
 	1: depth 1 in 0.10 seconds
 	2: depth 2 in 0.09 seconds
 	3: depth 3 in 0.09 seconds
+	4: depth 4 in 1.13 seconds

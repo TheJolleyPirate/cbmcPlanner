@@ -122,11 +122,18 @@ def writeLogs(problem, logOutFolder, results, valid, problemStateSize, realState
     # Log history of execution times
     if history is not None:
         fileLogs += "history:\n"
+        addLast = True
+        nextIndex = 1
         for i in range(len(history)):
             current = history[i]
             runTime = "{:0.2f}".format(current[0])
             runDepth = current[1]
+            if runDepth == depth:
+                addLast = False
             fileLogs += f"\t{i + 1}: depth {runDepth} in {runTime} seconds\n"
+            nextIndex = i + 2
+        if addLast:
+            fileLogs += f"\t{nextIndex}: depth {depth} in {formattedTime} seconds\n"
 
     # Prepare output folder based on problem state size and other parameters
     fileName = getLogFileName(logOutFolder, problemStateSize, maximumDepth, pTimeout, dTimeout, gAllocation, problem, plan, timeoutBool, valid)
@@ -238,17 +245,26 @@ def corrolate(root):
                     finalTime = float(finalTime.split(" ")[0])
             if finalTime:
                 endTimes.append(finalTime)
+            finalDepthAdded = False
             for line in history:
                 if "depth " in line:
                     temp = line.split("depth ")[1]
                     parts = temp.split(" ")
                     currentDepth = int(parts[0])
                     currentTime = float(parts[2])
+                    if currentDepth == depth:
+                        finalDepthAdded = True
                     if currentDepth in historyDict:
                         historyDict[currentDepth].append(currentTime)
                     else:
                         historyDict[currentDepth] = list()
                         historyDict[currentDepth].append(currentTime)
+            if not finalDepthAdded:
+                if depth in historyDict:
+                    historyDict[depth].append(finalTime)
+                else:
+                    historyDict[depth] = list()
+                    historyDict[depth].append(finalTime)
 
         logFolder = f"{constructedFolder}/averaged"
         Path(logFolder).mkdir(parents=True, exist_ok=True)
@@ -368,14 +384,16 @@ def corrolate(root):
         mdFile = f"{mdTableFolder}/{n}"
         with open(mdFile, "w") as md:
             md.write(mdTableString)
-        csvFile = f"{csvTableFolder}/{n}"
+        csvExtension = n.rsplit(".", 1)[0] + ".csv"
+        csvFile = f"{csvTableFolder}/{csvExtension}"
         with open(csvFile, "w") as csv:
             csv.write(csvTableString)
 
 if __name__ == "__main__":
-    argFolder = sys.argv[1]
-    if argFolder is None:
-        argFolder = "output"
-    elif not os.path.isdir(argFolder):
+    try:
+        argFolder = sys.argv[1]
+    except IndexError:
+        argFolder = "output/logs"
+    if not os.path.isdir(argFolder):
         raise ValueError("provided argument is not a vaild directory")
     corrolate(argFolder)
