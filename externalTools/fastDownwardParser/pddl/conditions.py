@@ -246,7 +246,7 @@ class Literal(Condition):
         return (self.hash == other.hash and
                 self.__class__ is other.__class__ and
                 self.predicate == other.predicate and
-                self.args == other.args)
+                self.args == other.arguments)
     def __ne__(self, other):
         return not self == other
     @property

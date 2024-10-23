@@ -1,4 +1,3 @@
-input folder: input/testing
 starting depth: 1
 depth step: 1
 max depth: 0
@@ -9,11 +8,5 @@ p timeout: 0
 d timeout: 300
 geo allocation: 0
 state size: 100%
-problem number: 3
-number of problems: 2
-run number: 1
 number of runs: 1
 stop on invalid: False
-<><><><><><><><><>
-input/testing/blocks/probBLOCKS-4-0.pddl
-input/testing/miconic/s1-0.pddl

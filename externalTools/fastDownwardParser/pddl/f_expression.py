@@ -37,7 +37,7 @@ class PrimitiveNumericExpression(FunctionalExpression):
         return self.hash
     def __eq__(self, other):
         return (self.__class__ == other.__class__ and self.symbol == other.symbol
-                and self.args == other.args)
+                and self.args == other.arguments)
     def __str__(self):
         return "%s %s(%s)" % ("PNE", self.symbol, ", ".join(map(str, self.args)))
     def dump(self, indent="  "):

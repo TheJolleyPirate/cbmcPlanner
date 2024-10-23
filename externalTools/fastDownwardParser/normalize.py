@@ -18,9 +18,9 @@ class PreconditionProxy(ConditionProxy):
     def set(self, new_condition):
         self.owner.precondition = self.condition = new_condition
     def register_owner(self, task):
-        task.actions.append(self.owner)
+        task.__actions.append(self.owner)
     def delete_owner(self, task):
-        task.actions.remove(self.owner)
+        task.__actions.remove(self.owner)
     def build_rules(self, rules):
         action = self.owner
         rule_head = get_action_predicate(action)
